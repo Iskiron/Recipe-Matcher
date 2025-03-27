@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="SmartRecipe - AI-powered meal solutions using your ingredients and dietary needs">
+    <title>SmartRecipe - Intelligent Meal Planning</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --indigo-50: #eef2ff;
+            --indigo-100: #e0e7ff;
+            --indigo-600: #4f46e5;
+            --indigo-700: #4338ca;
+            --slate-50: #f8fafc;
+            --slate-200: #e2e8f0;
+            --slate-600: #475569;
+            --slate-700: #334155;
+            --slate-800: #1e293b;
+            --slate-900: #0f172a;
+            --white: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            background-color: var(--white);
+            color: var(--slate-800);
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            width: 100%;
+            top: 0;
+            background-color: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(8px);
+            z-index: 50;
+            border-bottom: 1px solid var(--slate-200);
+            padding: 1rem 0;
+        }
+
+        .nav-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--slate-900);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: var(--slate-600);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .nav-link:hover {
+            color: var(--slate-900);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding-top: 6rem;
+            padding-bottom: 3rem;
+            text-align: center;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        .hero-title {
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: var(--slate-900);
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .hero-description {
+            font-size: 1.125rem;
+            color: var(--slate-600);
+            margin-bottom: 2rem;
+            max-width: 36rem;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Search Form */
+        .search-form {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            max-width: 640px;
+            margin: 0 auto;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 0.75rem 1.25rem;
+            border: 1px solid var(--slate-200);
+            border-radius: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .search-input:focus {
+            outline: 2px solid var(--indigo-600);
+            border-color: transparent;
+        }
+
+        .search-button {
+            padding: 0.75rem 1.5rem;
+            background-color: var(--indigo-600);
+            color: var(--white);
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .search-button:hover {
+            background-color: var(--indigo-700);
+        }
+
+        /* Features Section */
+        .features {
+            padding: 4rem 0;
+            background-color: var(--slate-50);
+        }
+
+        .features-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            display: grid;
+            gap: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        }
+
+        .feature-card {
+            background-color: var(--white);
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 24px -6px rgba(0,0,0,0.08);
+        }
+
+        .feature-icon {
+            width: 3rem;
+            height: 3rem;
+            background-color: var(--indigo-100);
+            color: var(--indigo-600);
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--slate-900);
+            margin-bottom: 0.75rem;
+        }
+
+        /* Dietary Filters */
+        .dietary-section {
+            padding: 4rem 0;
+            text-align: center;
+        }
+
+        .dietary-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        .section-title {
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: var(--slate-900);
+            margin-bottom: 1rem;
+        }
+
+        .section-description {
+            color: var(--slate-600);
+            margin-bottom: 2rem;
+        }
+
+        .diet-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            justify-content: center;
+        }
+
+        .diet-filter {
+            padding: 0.5rem 1.25rem;
+            background-color: var(--white);
+            border: 1px solid var(--slate-200);
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .diet-filter:hover {
+            border-color: var(--indigo-600);
+        }
+
+        .diet-filter.active {
+            background-color: var(--indigo-50);
+            border-color: var(--indigo-600);
+            color: var(--indigo-700);
+        }
+
+        /* How It Works */
+        .steps-section {
+            padding: 4rem 0;
+            background-color: var(--slate-50);
+        }
+
+        .steps-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            display: grid;
+            gap: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        }
+
+        .step-card {
+            text-align: center;
+            padding: 1.5rem;
+        }
+
+        .step-number {
+            width: 4rem;
+            height: 4rem;
+            background-color: var(--indigo-600);
+            color: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0 auto 1.5rem;
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid var(--slate-200);
+            padding: 3rem 0;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero-title {
+                font-size: 1.875rem;
+            }
+
+            .features-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <div class="logo">SmartRecipe</div>
+            <div class="nav-links">
+                <a href="#features" class="nav-link">Features</a>
+                <a href="#dietary" class="nav-link">Dietary</a>
+                <a href="#login" class="nav-link">Sign in</a>
+                <a href="#signup" class="search-button">Get started</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <main class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">Transform Ingredients into Perfect Meals</h1>
+            <p class="hero-description">AI-powered recipe recommendations based on your pantry items and dietary preferences</p>
+            <form class="search-form">
+                <input type="search" placeholder="Enter ingredients (e.g., chicken, broccoli)..." class="search-input">
+                <button type="submit" class="search-button">Find Recipes</button>
+            </form>
+        </div>
+    </main>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="features-container">
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fa-solid fa-carrot"></i></div>
+                <h3 class="feature-title">Smart Ingredient Matching</h3>
+                <p>Discover recipes that perfectly utilize your available ingredients</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fa-solid fa-scale-balanced"></i></div>
+                <h3 class="feature-title">Dietary Restrictions</h3>
+                <p>Gluten-free, vegan, keto, and 15+ dietary filters</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                <h3 class="feature-title">Smart Adjustments</h3>
+                <p>Automatic ingredient substitutions and portion control</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dietary Filters -->
+    <section class="dietary-section">
+        <div class="dietary-container">
+            <h2 class="section-title">Dietary Preferences</h2>
+            <p class="section-description">Select your dietary requirements</p>
+            <div class="diet-filters">
+                <button class="diet-filter">Vegan</button>
+                <button class="diet-filter">Vegetarian</button>
+                <button class="diet-filter">Gluten-Free</button>
+                <button class="diet-filter">Dairy-Free</button>
+                <button class="diet-filter">Nut-Free</button>
+                <button class="diet-filter">Keto</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="steps-section">
+        <div class="steps-container">
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <h3 class="feature-title">Enter Ingredients</h3>
+                <p>List items from your pantry or fridge</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <h3 class="feature-title">Set Preferences</h3>
+                <p>Select dietary needs and restrictions</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <h3 class="feature-title">Get Recipes</h3>
+                <p>Receive personalized recipe suggestions</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="nav-container">
+            <p>© 2023 SmartRecipe. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.querySelectorAll('.diet-filter').forEach(button => {
+            button.addEventListener('click', () => {
+                button.classList.toggle('active');
+            });
+        });
+    </script>
+</body>
+</html>
