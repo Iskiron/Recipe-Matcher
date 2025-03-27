@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Share Your Recipe | SmartRecipe</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --indigo-50: #eef2ff;
+            --indigo-100: #e0e7ff;
+            --indigo-200: #c7d2fe;
+            --indigo-600: #4f46e5;
+            --indigo-700: #4338ca;
+            --slate-200: #e2e8f0;
+            --slate-600: #475569;
+            --slate-800: #1e293b;
+            --white: #ffffff;
+            --transition-speed: 0.3s;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        body {
+            background-color: var(--indigo-50);
+            color: var(--slate-800);
+            line-height: 1.6;
+        }
+
+        /* Creative Navigation Bar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            background: linear-gradient(135deg, rgba(255,255,255,0.98) 0%, rgba(238,242,255,0.98) 100%);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all var(--transition-speed) ease;
+        }
+
+        .navbar.scrolled {
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            font-size: 1.75rem;
+            color: var(--indigo-600);
+            transition: transform 0.5s ease;
+        }
+
+        .logo:hover .logo-icon {
+            transform: rotate(15deg);
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(to right, var(--indigo-600), var(--indigo-700));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            transition: all var(--transition-speed) ease;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .nav-link {
+            position: relative;
+            color: var(--slate-600);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 0;
+            transition: all var(--transition-speed) ease;
+        }
+
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background: linear-gradient(to right, var(--indigo-600), var(--indigo-700));
+            transition: width var(--transition-speed) ease;
+        }
+
+        .nav-link:hover {
+            color: var(--indigo-700);
+        }
+
+        .nav-link:hover::before {
+            width: 100%;
+        }
+
+        .nav-link.active {
+            color: var(--indigo-700);
+        }
+
+        .nav-link.active::before {
+            width: 100%;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .btn-signup {
+            padding: 0.5rem 1.25rem;
+            background: linear-gradient(to right, var(--indigo-600), var(--indigo-700));
+            color: var(--white);
+            border: none;
+            border-radius: 0.375rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition-speed) ease;
+            box-shadow: 0 4px 6px rgba(79, 70, 229, 0.2);
+        }
+
+        .btn-signup:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(79, 70, 229, 0.3);
+        }
+
+        .btn-signup:active {
+            transform: translateY(0);
+        }
+
+        /* Mobile Menu */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--slate-600);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .mobile-menu {
+            position: fixed;
+            top: 70px;
+            left: 0;
+            width: 100%;
+            background: var(--white);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            padding: 1rem 2rem;
+            transform: translateY(-150%);
+            opacity: 0;
+            transition: all 0.4s ease;
+            z-index: 999;
+        }
+
+        .mobile-menu.active {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .mobile-nav-links {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .mobile-nav-link {
+            color: var(--slate-600);
+            text-decoration: none;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--slate-200);
+            transition: all var(--transition-speed) ease;
+        }
+
+        .mobile-nav-link:hover {
+            color: var(--indigo-700);
+            padding-left: 0.5rem;
+        }
+
+        .mobile-nav-actions {
+            margin-top: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .nav-links, .nav-actions {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .nav-container {
+                padding: 0 1.5rem;
+            }
+        }
+
+        /* Scroll behavior */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Sample content to demonstrate scroll effect */
+        .content-section {
+            height: 100vh;
+            padding: 6rem 2rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--slate-600);
+        }
+
+        /* Contact Page Specific Styles */
+        .contact-container {
+            max-width: 1200px;
+            margin: 6rem auto 0;
+            padding: 2rem;
+        }
+
+        /* Page Header */
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, var(--indigo-600), var(--indigo-700));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .page-description {
+            color: var(--slate-600);
+            max-width: 700px;
+            margin: 0 auto;
+            font-size: 1.1rem;
+        }
+
+        /* Contact Layout */
+        .contact-layout {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 3rem;
+            margin-bottom: 4rem;
+        }
+
+        .contact-form-container {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .contact-info {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        /* Recipe Submission Form */
+        .recipe-form {
+            background: var(--white);
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--slate-800);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--slate-200);
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            transition: border-color var(--transition-speed) ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--indigo-600);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        textarea.form-control {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .ingredients-list {
+            margin-top: 1rem;
+        }
+
+        .ingredient-item {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .ingredient-input {
+            flex: 1;
+        }
+
+        .add-ingredient {
+            background: var(--indigo-100);
+            color: var(--indigo-700);
+            border: none;
+            border-radius: 0.25rem;
+            padding: 0.25rem 0.5rem;
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: all var(--transition-speed) ease;
+        }
+
+        .add-ingredient:hover {
+            background: var(--indigo-200);
+        }
+
+        .remove-ingredient {
+            background: none;
+            border: none;
+            color: var(--slate-600);
+            cursor: pointer;
+            transition: color var(--transition-speed) ease;
+        }
+
+        .remove-ingredient:hover {
+            color: var(--indigo-600);
+        }
+
+        /* Dietary Options */
+        .dietary-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .dietary-option {
+            display: none;
+        }
+
+        .dietary-label {
+            padding: 0.5rem 1rem;
+            background: var(--indigo-100);
+            color: var(--indigo-700);
+            border-radius: 1rem;
+            cursor: pointer;
+            transition: all var(--transition-speed) ease;
+            font-size: 0.875rem;
+        }
+
+        .dietary-option:checked + .dietary-label {
+            background: var(--indigo-600);
+            color: var(--white);
+        }
+
+        /* Submit Button */
+        .submit-btn {
+            background: linear-gradient(to right, var(--indigo-600), var(--indigo-700));
+            color: var(--white);
+            border: none;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            width: 100%;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
+        }
+
+        /* Contact Info */
+        .info-card {
+            background: var(--white);
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+        }
+
+        .info-title {
+            font-size: 1.25rem;
+            margin-bottom: 1.5rem;
+            color: var(--indigo-700);
+            position: relative;
+        }
+
+        .info-title::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background: linear-gradient(to right, var(--indigo-600), var(--indigo-700));
+            border-radius: 3px;
+        }
+
+        .contact-method {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .contact-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--indigo-100);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--indigo-700);
+            flex-shrink: 0;
+        }
+
+        .contact-details h4 {
+            margin-bottom: 0.25rem;
+            color: var(--slate-800);
+        }
+
+        .contact-details p, .contact-details a {
+            color: var(--slate-600);
+            text-decoration: none;
+            transition: color var(--transition-speed) ease;
+        }
+
+        .contact-details a:hover {
+            color: var(--indigo-600);
+        }
+
+        /* Social Links */
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            background: var(--indigo-100);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--indigo-700);
+            transition: all var(--transition-speed) ease;
+        }
+
+        .social-link:hover {
+            background: var(--indigo-600);
+            color: var(--white);
+            transform: translateY(-3px);
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .contact-layout {
+                flex-direction: column;
+            }
+            
+            .page-title {
+                font-size: 2rem;
+            }
+        }
+
+         /* Footer Styles */
+         .site-footer {
+            background-color: var(--slate-800);
+            color: var(--white);
+            padding: 3rem 0 0;
+            margin-top: 3rem;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-heading {
+            color: var(--white);
+            font-size: 1.1rem;
+            margin-bottom: 1.25rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .footer-heading::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 40px;
+            height: 2px;
+            background-color: var(--indigo-600);
+        }
+
+        .footer-text {
+            color: var(--slate-200);
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-links a {
+            color: var(--slate-200);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--indigo-100);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--white);
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background-color: var(--indigo-600);
+            transform: translateY(-3px);
+        }
+
+        .newsletter-form {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .newsletter-form input {
+            padding: 0.75rem 1rem;
+            border: none;
+            border-radius: 4px;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--white);
+        }
+
+        .newsletter-form input::placeholder {
+            color: var(--slate-200);
+        }
+
+        .newsletter-form button {
+            padding: 0.75rem;
+            background-color: var(--indigo-600);
+            color: var(--white);
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .newsletter-form button:hover {
+            background-color: var(--indigo-700);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1.5rem 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .copyright {
+            color: var(--slate-400);
+            font-size: 0.875rem;
+        }
+
+        .legal-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .legal-links a {
+            color: var(--slate-400);
+            font-size: 0.875rem;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .legal-links a:hover {
+            color: var(--indigo-100);
+        }
+
+        @media (min-width: 768px) {
+            .footer-bottom {
+                flex-direction: row;
+            }
+
+            .footer-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+      <!-- Creative Navigation Bar -->
+      <nav class="navbar">
+        <div class="nav-container">
+            <a href="home.html" class="logo">
+                <i class="fas fa-utensils logo-icon"></i>
+                <span class="logo-text">SmartRecipe</span>
+            </a>
+
+            <div class="nav-links">
+                <a href="Index.html" class="nav-link">Home</a>
+                <a href="Dietary.html" class="nav-link">Dietary</a>
+                <a href="About.html" class="nav-link">About</a>
+                <a href="Community.html" class="nav-link">Community</a>
+            </div>
+
+            <div class="nav-actions">
+                <a href="signin.html" class="nav-link">Login</a>
+                <a href="signup.html"><button class="btn-signup" >Sign Up</button></a>
+            </div>
+
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div class="mobile-menu" id="mobileMenu">
+            <div class="mobile-nav-links">
+                <a href="home.html" class="mobile-nav-link">Home</a>
+                <a href="dietary.html" class="mobile-nav-link">Dietary</a>
+                <a href="about.html" class="mobile-nav-link">About</a>
+                <a href="Community.html" class="nav-link">Community</a>
+            </div>
+            <div class="mobile-nav-actions">
+                <a href="#login" class="mobile-nav-link">Login</a>
+                <a href="signup.html"><button class="btn-signup" >Sign Up</button></a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Contact Page Content -->
+    <div class="contact-container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1 class="page-title">Share Your Recipe</h1>
+            <p class="page-description">
+                Have a special recipe you'd like to share with our community? Submit it below and help others discover delicious meals!
+            </p>
+        </div>
+
+        <!-- Contact Layout -->
+        <div class="contact-layout">
+            <!-- Recipe Submission Form -->
+            <div class="contact-form-container">
+                <form class="recipe-form" id="recipeSubmissionForm">
+                    <div class="form-group">
+                        <label for="recipeName" class="form-label">Recipe Name</label>
+                        <input type="text" id="recipeName" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="yourName" class="form-label">Your Name</label>
+                        <input type="text" id="yourName" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="yourEmail" class="form-label">Email Address</label>
+                        <input type="email" id="yourEmail" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Ingredients</label>
+                        <div class="ingredients-list" id="ingredientsList">
+                            <div class="ingredient-item">
+                                <input type="text" class="form-control ingredient-input" placeholder="e.g., 1 cup flour" required>
+                                <button type="button" class="remove-ingredient">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <button type="button" class="add-ingredient" id="addIngredient">
+                            <i class="fas fa-plus"></i> Add Ingredient
+                        </button>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="instructions" class="form-label">Instructions</label>
+                        <textarea id="instructions" class="form-control" required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Dietary Information</label>
+                        <div class="dietary-options">
+                            <input type="checkbox" id="vegetarian" class="dietary-option" name="dietary">
+                            <label for="vegetarian" class="dietary-label">Vegetarian</label>
+                            
+                            <input type="checkbox" id="vegan" class="dietary-option" name="dietary">
+                            <label for="vegan" class="dietary-label">Vegan</label>
+                            
+                            <input type="checkbox" id="glutenFree" class="dietary-option" name="dietary">
+                            <label for="glutenFree" class="dietary-label">Gluten-Free</label>
+                            
+                            <input type="checkbox" id="dairyFree" class="dietary-option" name="dietary">
+                            <label for="dairyFree" class="dietary-label">Dairy-Free</label>
+                            
+                            <input type="checkbox" id="nutFree" class="dietary-option" name="dietary">
+                            <label for="nutFree" class="dietary-label">Nut-Free</label>
+                            
+                            <input type="checkbox" id="keto" class="dietary-option" name="dietary">
+                            <label for="keto" class="dietary-label">Keto</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="prepTime" class="form-label">Preparation Time (minutes)</label>
+                        <input type="number" id="prepTime" class="form-control" min="1">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="recipeImage" class="form-label">Recipe Image (optional)</label>
+                        <input type="file" id="recipeImage" class="form-control" accept="image/*">
+                    </div>
+
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-paper-plane"></i> Submit Recipe
+                    </button>
+                </form>
+            </div>
+
+            <!-- Contact Information -->
+            <div class="contact-info">
+                <div class="info-card">
+                    <h3 class="info-title">Get In Touch</h3>
+                    
+                    <div class="contact-method">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>Email Us</h4>
+                            <a href="mailto:recipes@smartrecipe.com">recipes@smartrecipe.com</a>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-method">
+                        <div class="contact-icon">
+                            <i class="fas fa-phone-alt"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>Call Us</h4>
+                            <a href="tel:+18005551234">+1 (800) 555-1234</a>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-method">
+                        <div class="contact-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>Visit Us</h4>
+                            <p>123 Culinary Street<br>Foodie City, FC 12345</p>
+                        </div>
+                    </div>
+                    
+                    <div class="social-links">
+                        <a href="#" class="social-link" aria-label="Facebook">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Pinterest">
+                            <i class="fab fa-pinterest-p"></i>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Twitter">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="info-card">
+                    <h3 class="info-title">Recipe Submission Guidelines</h3>
+                    <ul style="color: var(--slate-600); padding-left: 1.5rem;">
+                        <li style="margin-bottom: 0.5rem;">Provide accurate measurements for ingredients</li>
+                        <li style="margin-bottom: 0.5rem;">Include step-by-step instructions</li>
+                        <li style="margin-bottom: 0.5rem;">Specify cooking times and temperatures</li>
+                        <li style="margin-bottom: 0.5rem;">Note any special equipment needed</li>
+                        <li>Select all applicable dietary tags</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        <!-- Footer -->
+        <footer class="site-footer">
+            <div class="footer-container">
+                <!-- Main Footer Content -->
+                <div class="footer-grid">
+                    <!-- Company Info -->
+                    <div class="footer-section">
+                        <h3 class="footer-heading">SmartRecipe</h3>
+                        <p class="footer-text">Transforming ingredients into perfect meals with AI-powered recommendations.
+                        </p>
+                        <div class="social-links">
+                            <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                            <a href="#" aria-label="Pinterest"><i class="fab fa-pinterest-p"></i></a>
+                        </div>
+                    </div>
+    
+                    <!-- Quick Links -->
+                    <div class="footer-section">
+                        <h3 class="footer-heading">Quick Links</h3>
+                        <ul class="footer-links">
+                            <li><a href="/Frontend/Index.html">Home</a></li>
+                            <li><a href="#features">Features</a></li>
+                            <li><a href="/Frontend/Dietary.html">Dietary Options</a></li>
+                            <li><a href="/Frontend/Index.html">Recipe Search</a></li>
+                            <li><a href="/Frontend/signin.html">My Account</a></li>
+                        </ul>
+                    </div>
+    
+                    <!-- Resources -->
+                    <div class="footer-section">
+                        <h3 class="footer-heading">Resources</h3>
+                        <ul class="footer-links">
+                            <li><a href="#blog">Recipe Blog</a></li>
+                            <li><a href="#guides">Cooking Guides</a></li>
+                            <li><a href="#meal-plans">Meal Plans</a></li>
+                            <li><a href="#nutrition">Nutrition Info</a></li>
+                            <li><a href="#faq">FAQs</a></li>
+                        </ul>
+                    </div>
+    
+                    <!-- Newsletter -->
+                    <div class="footer-section">
+                        <h3 class="footer-heading">Newsletter</h3>
+                        <p class="footer-text">Subscribe for weekly recipe inspiration and cooking tips.</p>
+                        <form class="newsletter-form">
+                            <input type="email" placeholder="Your email address" required>
+                            <button type="submit">Subscribe</button>
+                        </form>
+                    </div>
+                </div>
+    
+                <!-- Footer Bottom -->
+                <div class="footer-bottom">
+                    <div class="copyright">
+                        &copy; 2023 SmartRecipe. All rights reserved.
+                    </div>
+                    <div class="legal-links">
+                        <a href="#privacy">Privacy Policy</a>
+                        <a href="#terms">Terms of Service</a>
+                        <a href="#cookies">Cookie Policy</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    
+
+    <script>
+        // Add/Remove Ingredient Fields
+        const addIngredientBtn = document.getElementById('addIngredient');
+        const ingredientsList = document.getElementById('ingredientsList');
+        
+        addIngredientBtn.addEventListener('click', () => {
+            const newIngredient = document.createElement('div');
+            newIngredient.className = 'ingredient-item';
+            newIngredient.innerHTML = `
+                <input type="text" class="form-control ingredient-input" placeholder="e.g., 2 tbsp olive oil" required>
+                <button type="button" class="remove-ingredient">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            ingredientsList.appendChild(newIngredient);
+            
+            // Add event listener to new remove button
+            newIngredient.querySelector('.remove-ingredient').addEventListener('click', () => {
+                if (ingredientsList.children.length > 1) {
+                    ingredientsList.removeChild(newIngredient);
+                }
+            });
+        });
+        
+        // Form Submission
+        const recipeForm = document.getElementById('recipeSubmissionForm');
+        recipeForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            // Here you would typically send the form data to your server
+            alert('Thank you for submitting your recipe! Our team will review it shortly.');
+            recipeForm.reset();
+            
+            // Reset ingredients to one field
+            ingredientsList.innerHTML = `
+                <div class="ingredient-item">
+                    <input type="text" class="form-control ingredient-input" placeholder="e.g., 1 cup flour" required>
+                    <button type="button" class="remove-ingredient">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `;
+        });
+        
+        // Initialize first remove button
+        document.querySelector('.remove-ingredient').addEventListener('click', () => {
+            // Don't allow removing the last ingredient field
+            if (ingredientsList.children.length > 1) {
+                ingredientsList.removeChild(ingredientsList.firstElementChild);
+            }
+        });
+    </script>
+</body>
+</html>

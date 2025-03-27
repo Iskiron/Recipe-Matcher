@@ -1,0 +1,827 @@
+<!-- recipe-detail.html (Recipe Detail Page) -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe Detail | SmartRecipe</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --indigo-50: #eef2ff;
+            --indigo-100: #e0e7ff;
+            --indigo-600: #4f46e5;
+            --indigo-700: #4338ca;
+            --slate-200: #e2e8f0;
+            --slate-600: #475569;
+            --slate-800: #1e293b;
+            --white: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, sans-serif;
+        }
+
+        body {
+            background-color: var(--indigo-50);
+            color: var(--slate-800);
+            line-height: 1.6;
+        }
+
+       /* Creative Navigation Bar */
+       .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            background: linear-gradient(135deg, rgba(255,255,255,0.98) 0%, rgba(238,242,255,0.98) 100%);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all var(--transition-speed) ease;
+        }
+
+        .navbar.scrolled {
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            font-size: 1.75rem;
+            color: var(--indigo-600);
+            transition: transform 0.5s ease;
+        }
+
+        .logo:hover .logo-icon {
+            transform: rotate(15deg);
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(to right, var(--indigo-600), var(--indigo-700));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            transition: all var(--transition-speed) ease;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .nav-link {
+            position: relative;
+            color: var(--slate-600);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 0;
+            transition: all var(--transition-speed) ease;
+        }
+
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background: linear-gradient(to right, var(--indigo-600), var(--indigo-700));
+            transition: width var(--transition-speed) ease;
+        }
+
+        .nav-link:hover {
+            color: var(--indigo-700);
+        }
+
+        .nav-link:hover::before {
+            width: 100%;
+        }
+
+        .nav-link.active {
+            color: var(--indigo-700);
+        }
+
+        .nav-link.active::before {
+            width: 100%;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .btn-signup {
+            padding: 0.5rem 1.25rem;
+            background: linear-gradient(to right, var(--indigo-600), var(--indigo-700));
+            color: var(--white);
+            border: none;
+            border-radius: 0.375rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition-speed) ease;
+            box-shadow: 0 4px 6px rgba(79, 70, 229, 0.2);
+        }
+
+        .btn-signup:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(79, 70, 229, 0.3);
+        }
+
+        .btn-signup:active {
+            transform: translateY(0);
+        }
+
+        /* Mobile Menu */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--slate-600);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .mobile-menu {
+            position: fixed;
+            top: 70px;
+            left: 0;
+            width: 100%;
+            background: var(--white);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            padding: 1rem 2rem;
+            transform: translateY(-150%);
+            opacity: 0;
+            transition: all 0.4s ease;
+            z-index: 999;
+        }
+
+        .mobile-menu.active {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .mobile-nav-links {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .mobile-nav-link {
+            color: var(--slate-600);
+            text-decoration: none;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--slate-200);
+            transition: all var(--transition-speed) ease;
+        }
+
+        .mobile-nav-link:hover {
+            color: var(--indigo-700);
+            padding-left: 0.5rem;
+        }
+
+        .mobile-nav-actions {
+            margin-top: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .nav-links, .nav-actions {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .nav-container {
+                padding: 0 1.5rem;
+            }
+        }
+
+        /* Scroll behavior */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Sample content to demonstrate scroll effect */
+        .content-section {
+            height: 100vh;
+            padding: 6rem 2rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--slate-600);
+        }
+
+
+        /* Recipe Detail Page */
+        .recipe-detail-container {
+            max-width: 1200px;
+            margin: 6rem auto 3rem;
+            padding: 0 2rem;
+        }
+
+        .recipe-header {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .recipe-image-container {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .recipe-image {
+            width: 100%;
+            border-radius: 1rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .recipe-info {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .recipe-title {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--slate-800);
+        }
+
+        .recipe-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--slate-600);
+        }
+
+        .meta-item i {
+            color: var(--indigo-600);
+        }
+
+        .recipe-dietary {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .dietary-tag {
+            background: var(--indigo-100);
+            color: var(--indigo-700);
+            padding: 0.5rem 1rem;
+            border-radius: 1rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .recipe-summary {
+            margin-bottom: 2rem;
+            color: var(--slate-600);
+        }
+
+        .recipe-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 3rem;
+        }
+
+        .ingredients-section, .instructions-section {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--indigo-700);
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(to right, var(--indigo-600), var(--indigo-700));
+        }
+
+        .ingredients-list {
+            list-style-type: none;
+        }
+
+        .ingredient-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+            padding: 0.75rem;
+            background: var(--white);
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .ingredient-item i {
+            color: var(--indigo-600);
+        }
+
+        .instructions-list {
+            list-style-type: none;
+            counter-reset: step-counter;
+        }
+
+        .instruction-item {
+            counter-increment: step-counter;
+            margin-bottom: 1.5rem;
+            padding-left: 3rem;
+            position: relative;
+        }
+
+        .instruction-item::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 2rem;
+            height: 2rem;
+            background: var(--indigo-600);
+            color: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            font-size: 1.25rem;
+            color: var(--slate-600);
+        }
+
+        @media (max-width: 768px) {
+            .recipe-header {
+                flex-direction: column;
+            }
+            
+            .recipe-image-container {
+                order: -1;
+            }
+        }
+
+        /* Footer Styles */
+        .site-footer {
+            background-color: var(--slate-800);
+            color: var(--white);
+            padding: 3rem 0 0;
+            margin-top: 3rem;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-heading {
+            color: var(--white);
+            font-size: 1.1rem;
+            margin-bottom: 1.25rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .footer-heading::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 40px;
+            height: 2px;
+            background-color: var(--indigo-600);
+        }
+
+        .footer-text {
+            color: var(--slate-200);
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-links a {
+            color: var(--slate-200);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--indigo-100);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--white);
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background-color: var(--indigo-600);
+            transform: translateY(-3px);
+        }
+
+        .newsletter-form {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .newsletter-form input {
+            padding: 0.75rem 1rem;
+            border: none;
+            border-radius: 4px;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--white);
+        }
+
+        .newsletter-form input::placeholder {
+            color: var(--slate-200);
+        }
+
+        .newsletter-form button {
+            padding: 0.75rem;
+            background-color: var(--indigo-600);
+            color: var(--white);
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .newsletter-form button:hover {
+            background-color: var(--indigo-700);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1.5rem 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .copyright {
+            color: var(--slate-400);
+            font-size: 0.875rem;
+        }
+
+        .legal-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .legal-links a {
+            color: var(--slate-400);
+            font-size: 0.875rem;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .legal-links a:hover {
+            color: var(--indigo-100);
+        }
+
+        @media (min-width: 768px) {
+            .footer-bottom {
+                flex-direction: row;
+            }
+
+            .footer-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+     <!-- Creative Navigation Bar -->
+     <nav class="navbar">
+        <div class="nav-container">
+            <a href="home.html" class="logo">
+                <i class="fas fa-utensils logo-icon"></i>
+                <span class="logo-text">SmartRecipe</span>
+            </a>
+
+            <div class="nav-links">
+                <a href="Index.html" class="nav-link">Home</a>
+                <a href="Dietary.html" class="nav-link">Dietary</a>
+                <a href="About.html" class="nav-link">About</a>
+                <a href="Community.html" class="nav-link">Community</a>
+            </div>
+
+            <div class="nav-actions">
+                <a href="signin.html" class="nav-link">Login</a>
+                <a href="signup.html"><button class="btn-signup" >Sign Up</button></a>
+            </div>
+
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div class="mobile-menu" id="mobileMenu">
+            <div class="mobile-nav-links">
+                <a href="home.html" class="mobile-nav-link">Home</a>
+                <a href="dietary.html" class="mobile-nav-link">Dietary</a>
+                <a href="about.html" class="mobile-nav-link">About</a>
+                <a href="contact.html" class="mobile-nav-link">Contact</a>
+            </div>
+            <div class="mobile-nav-actions">
+                <a href="#login" class="mobile-nav-link">Login</a>
+                <a href="signup.html"><button class="btn-signup" >Sign Up</button></a>
+            </div>
+        </div>
+    </nav>
+
+
+    <div class="recipe-detail-container">
+        <div id="recipeDetail">
+            <div class="loading">Loading recipe details...</div>
+        </div>
+    </div>
+
+        <!-- Footer -->
+        <footer class="site-footer">
+            <div class="footer-container">
+                <!-- Main Footer Content -->
+                <div class="footer-grid">
+                    <!-- Company Info -->
+                    <div class="footer-section">
+                        <h3 class="footer-heading">SmartRecipe</h3>
+                        <p class="footer-text">Transforming ingredients into perfect meals with AI-powered recommendations.
+                        </p>
+                        <div class="social-links">
+                            <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                            <a href="#" aria-label="Pinterest"><i class="fab fa-pinterest-p"></i></a>
+                        </div>
+                    </div>
+    
+                    <!-- Quick Links -->
+                    <div class="footer-section">
+                        <h3 class="footer-heading">Quick Links</h3>
+                        <ul class="footer-links">
+                            <li><a href="/Frontend/Index.html">Home</a></li>
+                            <li><a href="#features">Features</a></li>
+                            <li><a href="/Frontend/Dietary.html">Dietary Options</a></li>
+                            <li><a href="/Frontend/Index.html">Recipe Search</a></li>
+                            <li><a href="/Frontend/signin.html">My Account</a></li>
+                        </ul>
+                    </div>
+    
+                    <!-- Resources -->
+                    <div class="footer-section">
+                        <h3 class="footer-heading">Resources</h3>
+                        <ul class="footer-links">
+                            <li><a href="#blog">Recipe Blog</a></li>
+                            <li><a href="#guides">Cooking Guides</a></li>
+                            <li><a href="#meal-plans">Meal Plans</a></li>
+                            <li><a href="#nutrition">Nutrition Info</a></li>
+                            <li><a href="#faq">FAQs</a></li>
+                        </ul>
+                    </div>
+    
+                    <!-- Newsletter -->
+                    <div class="footer-section">
+                        <h3 class="footer-heading">Newsletter</h3>
+                        <p class="footer-text">Subscribe for weekly recipe inspiration and cooking tips.</p>
+                        <form class="newsletter-form">
+                            <input type="email" placeholder="Your email address" required>
+                            <button type="submit">Subscribe</button>
+                        </form>
+                    </div>
+                </div>
+    
+                <!-- Footer Bottom -->
+                <div class="footer-bottom">
+                    <div class="copyright">
+                        &copy; 2023 SmartRecipe. All rights reserved.
+                    </div>
+                    <div class="legal-links">
+                        <a href="#privacy">Privacy Policy</a>
+                        <a href="#terms">Terms of Service</a>
+                        <a href="#cookies">Cookie Policy</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+    <script>
+        // Spoonacular API Key - replace with your actual API key
+        const API_KEY = 'YOUR_SPOONACULAR_API_KEY';
+        
+        // Get recipe ID from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const recipeId = urlParams.get('id');
+        
+        // Fetch recipe details when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            if (recipeId) {
+                fetchRecipeDetails(recipeId);
+            } else {
+                document.getElementById('recipeDetail').innerHTML = '<div class="error">Recipe not found.</div>';
+            }
+        });
+        
+        async function fetchRecipeDetails(id) {
+            const recipeDetail = document.getElementById('recipeDetail');
+            
+            try {
+                // Show loading state
+                recipeDetail.innerHTML = '<div class="loading">Loading recipe details...</div>';
+                
+                // Fetch recipe information
+                const response = await fetch(
+                    `https://api.spoonacular.com/recipes/${id}/information?apiKey=${API_KEY}&includeNutrition=false`
+                );
+                
+                if (!response.ok) {
+                    throw new Error('Failed to fetch recipe details');
+                }
+                
+                const recipe = await response.json();
+                displayRecipeDetails(recipe);
+                
+            } catch (error) {
+                console.error('Error fetching recipe details:', error);
+                recipeDetail.innerHTML = '<div class="error">Failed to load recipe details. Please try again later.</div>';
+            }
+        }
+        
+        function displayRecipeDetails(recipe) {
+            const recipeDetail = document.getElementById('recipeDetail');
+            
+            // Handle missing image
+            const imageUrl = recipe.image || 'https://spoonacular.com/recipeImages/placeholder-636x393.jpg';
+            
+            // Get dietary tags
+            const diets = [];
+            if (recipe.vegetarian) diets.push('Vegetarian');
+            if (recipe.vegan) diets.push('Vegan');
+            if (recipe.glutenFree) diets.push('Gluten Free');
+            if (recipe.dairyFree) diets.push('Dairy Free');
+            
+            // Format ingredients
+            const ingredientsList = recipe.extendedIngredients.map(ing => `
+                <li class="ingredient-item">
+                    <i class="fas fa-circle"></i>
+                    <span>${ing.original}</span>
+                </li>
+            `).join('');
+            
+            // Format instructions (handle both analyzed and non-analyzed instructions)
+            let instructionsHtml = '';
+            if (recipe.analyzedInstructions && recipe.analyzedInstructions.length > 0) {
+                instructionsHtml = recipe.analyzedInstructions[0].steps.map(step => `
+                    <li class="instruction-item">
+                        ${step.step}
+                    </li>
+                `).join('');
+            } else if (recipe.instructions) {
+                instructionsHtml = recipe.instructions
+                    .split('\n')
+                    .filter(step => step.trim() !== '')
+                    .map((step, index) => `
+                        <li class="instruction-item">
+                            ${step}
+                        </li>
+                    `).join('');
+            } else {
+                instructionsHtml = '<li>No instructions provided.</li>';
+            }
+            
+            recipeDetail.innerHTML = `
+                <div class="recipe-header">
+                    <div class="recipe-image-container">
+                        <img src="${imageUrl}" alt="${recipe.title}" class="recipe-image">
+                    </div>
+                    <div class="recipe-info">
+                        <h1 class="recipe-title">${recipe.title}</h1>
+                        <div class="recipe-meta">
+                            <div class="meta-item">
+                                <i class="fas fa-clock"></i>
+                                <span>${recipe.readyInMinutes} mins</span>
+                            </div>
+                            <div class="meta-item">
+                                <i class="fas fa-utensils"></i>
+                                <span>${recipe.servings} servings</span>
+                            </div>
+                            <div class="meta-item">
+                                <i class="fas fa-fire"></i>
+                                <span>${recipe.healthScore} health score</span>
+                            </div>
+                        </div>
+                        ${diets.length > 0 ? `
+                        <div class="recipe-dietary">
+                            ${diets.map(diet => `<span class="dietary-tag">${diet}</span>`).join('')}
+                        </div>
+                        ` : ''}
+                        <div class="recipe-summary">
+                            ${recipe.summary.replace(/<[^>]*>/g, '')}
+                        </div>
+                    </div>
+                </div>
+                <div class="recipe-content">
+                    <div class="ingredients-section">
+                        <h2 class="section-title">Ingredients</h2>
+                        <ul class="ingredients-list">
+                            ${ingredientsList}
+                        </ul>
+                    </div>
+                    <div class="instructions-section">
+                        <h2 class="section-title">Instructions</h2>
+                        <ol class="instructions-list">
+                            ${instructionsHtml}
+                        </ol>
+                    </div>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>

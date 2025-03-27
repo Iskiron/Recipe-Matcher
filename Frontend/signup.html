@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartRecipe - Sign Up</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --indigo-50: #eef2ff;
+            --indigo-100: #e0e7ff;
+            --indigo-600: #4f46e5;
+            --indigo-700: #4338ca;
+            --slate-200: #e2e8f0;
+            --slate-600: #475569;
+            --slate-800: #1e293b;
+            --white: #ffffff;
+            --error-500: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, sans-serif;
+        }
+
+        body {
+            background-color: var(--indigo-50);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+       /* Creative Navigation Bar */
+       .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(238, 242, 255, 0.98) 100%);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all var(--transition-speed) ease;
+        }
+
+        .navbar.scrolled {
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            font-size: 1.75rem;
+            color: var(--indigo-600);
+            transition: transform 0.5s ease;
+        }
+
+        .logo:hover .logo-icon {
+            transform: rotate(15deg);
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(to right, var(--indigo-600), var(--indigo-700));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            transition: all var(--transition-speed) ease;
+        }
+
+        /* Signup Container */
+        .signup-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 6rem 1rem;
+        }
+
+        .signup-card {
+            background: var(--white);
+            padding: 3rem 2.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 24px -6px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            max-width: 450px;
+        }
+
+        .signup-title {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .signup-title h1 {
+            font-size: 1.5rem;
+            color: var(--slate-800);
+            margin-bottom: 0.5rem;
+        }
+
+        .signup-title p {
+            color: var(--slate-600);
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+            position: relative;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--slate-800);
+            font-weight: 500;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--slate-200);
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--indigo-600);
+        }
+
+        .password-wrapper {
+            position: relative;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--slate-600);
+            cursor: pointer;
+        }
+
+        .error-message {
+            color: var(--error-500);
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+            display: none;
+        }
+
+        .signup-button {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: var(--indigo-600);
+            color: var(--white);
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin-top: 1rem;
+        }
+
+        .signup-button:hover {
+            background-color: var(--indigo-700);
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: var(--slate-600);
+        }
+
+        .login-link a {
+            color: var(--indigo-700);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .terms {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+
+        .terms input {
+            margin-top: 0.25rem;
+        }
+
+        .terms label {
+            margin-bottom: 0;
+            font-weight: 400;
+        }
+
+        @media (max-width: 480px) {
+            .signup-card {
+                padding: 2rem 1.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a  class="logo">
+                <i class="fas fa-utensils logo-icon"></i>
+                <span class="logo-text">SmartRecipe</span>
+            </a>
+            </div>
+    </nav>
+
+    <div class="signup-container">
+        <div class="signup-card">
+            <div class="signup-title">
+                <h1>Create Your Account</h1>
+                <p>Join SmartRecipe to discover personalized recipes</p>
+            </div>
+
+            <form id="signupForm">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" class="form-input" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" class="form-input" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" class="form-input" id="password" required>
+                        <i class="fas fa-eye toggle-password" id="togglePassword"></i>
+                    </div>
+                    <div class="error-message" id="passwordError">Password must be at least 8 characters</div>
+                </div>
+
+                <div class="terms">
+                    <input type="checkbox" id="terms" required>
+                    <label for="terms">I agree to the <a href="#terms" style="color: var(--indigo-700);">Terms of
+                            Service</a> and <a href="#privacy" style="color: var(--indigo-700);">Privacy
+                            Policy</a></label>
+                </div>
+
+                <button type="submit" class="signup-button">Create Account</button>
+
+                <div class="login-link">
+                    Already have an account? <a href="/Frontend/signin.html">Sign in</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Toggle password visibility
+        const togglePassword = document.getElementById('togglePassword');
+        const password = document.getElementById('password');
+        const passwordError = document.getElementById('passwordError');
+
+        togglePassword.addEventListener('click', function () {
+            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+            password.setAttribute('type', type);
+            this.classList.toggle('fa-eye-slash');
+        });
+
+        // Simple password validation
+        password.addEventListener('input', function () {
+            if (this.value.length > 0 && this.value.length < 8) {
+                passwordError.style.display = 'block';
+            } else {
+                passwordError.style.display = 'none';
+            }
+        });
+
+        // Form submission
+        document.getElementById('signupForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            // Add your form submission logic here
+            alert('Account created successfully!');
+        });
+    </script>
+</body>
+
+</html>

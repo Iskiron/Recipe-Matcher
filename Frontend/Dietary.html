@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartRecipe - Dietary Preferences</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --indigo-50: #eef2ff;
+            --indigo-100: #e0e7ff;
+            --indigo-600: #4f46e5;
+            --indigo-700: #4338ca;
+            --slate-200: #e2e8f0;
+            --slate-600: #475569;
+            --slate-800: #1e293b;
+            --white: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, sans-serif;
+        }
+
+        body {
+            background-color: var(--indigo-50);
+            color: var(--slate-800);
+        }
+
+         /* Creative Navigation Bar */
+         .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            background: linear-gradient(135deg, rgba(255,255,255,0.98) 0%, rgba(238,242,255,0.98) 100%);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all var(--transition-speed) ease;
+        }
+
+        .navbar.scrolled {
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            font-size: 1.75rem;
+            color: var(--indigo-600);
+            transition: transform 0.5s ease;
+        }
+
+        .logo:hover .logo-icon {
+            transform: rotate(15deg);
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(to right, var(--indigo-600), var(--indigo-700));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            transition: all var(--transition-speed) ease;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .nav-link {
+            position: relative;
+            color: var(--slate-600);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 0;
+            transition: all var(--transition-speed) ease;
+        }
+
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background: linear-gradient(to right, var(--indigo-600), var(--indigo-700));
+            transition: width var(--transition-speed) ease;
+        }
+
+        .nav-link:hover {
+            color: var(--indigo-700);
+        }
+
+        .nav-link:hover::before {
+            width: 100%;
+        }
+
+        .nav-link.active {
+            color: var(--indigo-700);
+        }
+
+        .nav-link.active::before {
+            width: 100%;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .btn-signup {
+            padding: 0.5rem 1.25rem;
+            background: linear-gradient(to right, var(--indigo-600), var(--indigo-700));
+            color: var(--white);
+            border: none;
+            border-radius: 0.375rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition-speed) ease;
+            box-shadow: 0 4px 6px rgba(79, 70, 229, 0.2);
+        }
+
+        .btn-signup:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(79, 70, 229, 0.3);
+        }
+
+        .btn-signup:active {
+            transform: translateY(0);
+        }
+
+        /* Mobile Menu */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--slate-600);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .mobile-menu {
+            position: fixed;
+            top: 70px;
+            left: 0;
+            width: 100%;
+            background: var(--white);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            padding: 1rem 2rem;
+            transform: translateY(-150%);
+            opacity: 0;
+            transition: all 0.4s ease;
+            z-index: 999;
+        }
+
+        .mobile-menu.active {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .mobile-nav-links {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .mobile-nav-link {
+            color: var(--slate-600);
+            text-decoration: none;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--slate-200);
+            transition: all var(--transition-speed) ease;
+        }
+
+        .mobile-nav-link:hover {
+            color: var(--indigo-700);
+            padding-left: 0.5rem;
+        }
+
+        .mobile-nav-actions {
+            margin-top: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .nav-links, .nav-actions {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .nav-container {
+                padding: 0 1.5rem;
+            }
+        }
+
+        /* Scroll behavior */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Sample content to demonstrate scroll effect */
+        .content-section {
+            height: 100vh;
+            padding: 6rem 2rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--slate-600);
+        }
+
+
+        /* Dietary Page Specific Styles */
+        .dietary-container {
+            max-width: 1200px;
+            margin: 6rem auto 3rem;
+            padding: 0 2rem;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            color: var(--slate-800);
+            margin-bottom: 1rem;
+        }
+
+        .page-description {
+            color: var(--slate-600);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .dietary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .dietary-card {
+            background: var(--white);
+            border-radius: 0.75rem;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .dietary-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.12);
+        }
+
+        .card-header {
+            background-color: var(--indigo-600);
+            color: var(--white);
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .card-icon {
+            font-size: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        .card-description {
+            color: var(--slate-600);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .card-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .section-title {
+            font-weight: 600;
+            color: var(--slate-800);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-title i {
+            color: var(--indigo-600);
+        }
+
+        .section-content {
+            color: var(--slate-600);
+            padding-left: 1.75rem;
+            line-height: 1.6;
+        }
+
+        .food-list {
+            list-style-type: none;
+        }
+
+        .food-list li {
+            margin-bottom: 0.5rem;
+            position: relative;
+            padding-left: 1.5rem;
+        }
+
+        .food-list li::before {
+            content: "•";
+            color: var(--indigo-600);
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        .benefits-list {
+            list-style-type: none;
+        }
+
+        .benefits-list li {
+            margin-bottom: 0.75rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .benefits-list i {
+            color: var(--indigo-600);
+            margin-top: 0.2rem;
+        }
+
+        @media (max-width: 768px) {
+            .dietary-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+        }
+
+          /* Footer Styles */
+          .site-footer {
+            background-color: var(--slate-800);
+            color: var(--white);
+            padding: 3rem 0 0;
+            margin-top: 3rem;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-heading {
+            color: var(--white);
+            font-size: 1.1rem;
+            margin-bottom: 1.25rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .footer-heading::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 40px;
+            height: 2px;
+            background-color: var(--indigo-600);
+        }
+
+        .footer-text {
+            color: var(--slate-200);
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-links a {
+            color: var(--slate-200);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--indigo-100);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--white);
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background-color: var(--indigo-600);
+            transform: translateY(-3px);
+        }
+
+        .newsletter-form {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .newsletter-form input {
+            padding: 0.75rem 1rem;
+            border: none;
+            border-radius: 4px;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--white);
+        }
+
+        .newsletter-form input::placeholder {
+            color: var(--slate-200);
+        }
+
+        .newsletter-form button {
+            padding: 0.75rem;
+            background-color: var(--indigo-600);
+            color: var(--white);
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .newsletter-form button:hover {
+            background-color: var(--indigo-700);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1.5rem 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .copyright {
+            color: var(--slate-400);
+            font-size: 0.875rem;
+        }
+
+        .legal-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .legal-links a {
+            color: var(--slate-400);
+            font-size: 0.875rem;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .legal-links a:hover {
+            color: var(--indigo-100);
+        }
+
+        @media (min-width: 768px) {
+            .footer-bottom {
+                flex-direction: row;
+            }
+
+            .footer-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Creative Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="home.html" class="logo">
+                <i class="fas fa-utensils logo-icon"></i>
+                <span class="logo-text">SmartRecipe</span>
+            </a>
+
+            <div class="nav-links">
+                <a href="Index.html" class="nav-link">Home</a>
+                <a href="Dietary.html" class="nav-link">Dietary</a>
+                <a href="about.html" class="nav-link">About</a>
+                <a href="Community.html" class="nav-link">Community</a>
+            </div>
+
+            <div class="nav-actions">
+                <a href="signin.html" class="nav-link">Login</a>
+                <a href="signup.html"><button class="btn-signup" >Sign Up</button></a>
+            </div>
+
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div class="mobile-menu" id="mobileMenu">
+            <div class="mobile-nav-links">
+                <a href="home.html" class="mobile-nav-link">Home</a>
+                <a href="dietary.html" class="mobile-nav-link">Dietary</a>
+                <a href="about.html" class="mobile-nav-link">About</a>
+                <a href="Community.html" class="nav-link">Community</a>
+            </div>
+            <div class="mobile-nav-actions">
+                <a href="signin.html" class="mobile-nav-link">Login</a>
+                <a href="signup.html"><button class="btn-signup" >Sign Up</button></a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="dietary-container">
+        <div class="page-header">
+            <h1 class="page-title">Dietary Preferences</h1>
+            <p class="page-description">
+                Select your dietary preferences to get personalized recipe recommendations. 
+                Learn more about each dietary option below.
+            </p>
+        </div>
+
+        <div class="dietary-grid">
+            <!-- Vegan Card -->
+            <div class="dietary-card">
+                <div class="card-header">
+                    <div class="card-icon"><i class="fas fa-leaf"></i></div>
+                    <h3 class="card-title">Vegan</h3>
+                </div>
+                <div class="card-body">
+                    <p class="card-description">
+                        A plant-based diet that excludes all animal products including meat, dairy, eggs, and honey.
+                    </p>
+                    
+                    <div class="card-section">
+                        <h4 class="section-title"><i class="fas fa-check-circle"></i> Includes</h4>
+                        <ul class="food-list">
+                            <li>Fruits and vegetables</li>
+                            <li>Legumes and beans</li>
+                            <li>Whole grains</li>
+                            <li>Nuts and seeds</li>
+                            <li>Plant-based alternatives</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card-section">
+                        <h4 class="section-title"><i class="fas fa-times-circle"></i> Excludes</h4>
+                        <ul class="food-list">
+                            <li>All meat and poultry</li>
+                            <li>Fish and seafood</li>
+                            <li>Dairy products</li>
+                            <li>Eggs</li>
+                            <li>Animal-derived ingredients</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card-section">
+                        <h4 class="section-title"><i class="fas fa-heart"></i> Benefits</h4>
+                        <ul class="benefits-list">
+                            <li><i class="fas fa-check"></i> May reduce risk of chronic diseases</li>
+                            <li><i class="fas fa-check"></i> Lower environmental impact</li>
+                            <li><i class="fas fa-check"></i> Often higher in fiber and antioxidants</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Vegetarian Card -->
+            <div class="dietary-card">
+                <div class="card-header">
+                    <div class="card-icon"><i class="fas fa-carrot"></i></div>
+                    <h3 class="card-title">Vegetarian</h3>
+                </div>
+                <div class="card-body">
+                    <p class="card-description">
+                        A diet that excludes meat but may include dairy products and eggs.
+                    </p>
+                    
+                    <div class="card-section">
+                        <h4 class="section-title"><i class="fas fa-check-circle"></i> Includes</h4>
+                        <ul class="food-list">
+                            <li>Fruits and vegetables</li>
+                            <li>Dairy products</li>
+                            <li>Eggs</li>
+                            <li>Grains and legumes</li>
+                            <li>Nuts and seeds</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card-section">
+                        <h4 class="section-title"><i class="fas fa-times-circle"></i> Excludes</h4>
+                        <ul class="food-list">
+                            <li>All meat and poultry</li>
+                            <li>Fish and seafood</li>
+                            <li>Animal-derived rennet</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card-section">
+                        <h4 class="section-title"><i class="fas fa-heart"></i> Benefits</h4>
+                        <ul class="benefits-list">
+                            <li><i class="fas fa-check"></i> Lower saturated fat intake</li>
+                            <li><i class="fas fa-check"></i> May support heart health</li>
+                            <li><i class="fas fa-check"></i> More sustainable than meat-based diets</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gluten-Free Card -->
+            <div class="dietary-card">
+                <div class="card-header">
+                    <div class="card-icon"><i class="fas fa-bread-slice"></i></div>
+                    <h3 class="card-title">Gluten-Free</h3>
+                </div>
+                <div class="card-body">
+                    <p class="card-description">
+                        A diet that excludes gluten, a protein found in wheat, barley, rye, and triticale.
+                    </p>
+                    
+                    <div class="card-section">
+                        <h4 class="section-title"><i class="fas fa-check-circle"></i> Includes</h4>
+                        <ul class="food-list">
+                            <li>Fruits and vegetables</li>
+                            <li>Meat and poultry</li>
+                            <li>Fish and seafood</li>
+                            <li>Rice and quinoa</li>
+                            <li>Gluten-free grains</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card-section">
+                        <h4 class="section-title"><i class="fas fa-times-circle"></i> Excludes</h4>
+                        <ul class="food-list">
+                            <li>Wheat and wheat products</li>
+                            <li>Barley and rye</li>
+                            <li>Most conventional breads</li>
+                            <li>Many processed foods</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card-section">
+                        <h4 class="section-title"><i class="fas fa-heart"></i> Benefits</h4>
+                        <ul class="benefits-list">
+                            <li><i class="fas fa-check"></i> Essential for those with celiac disease</li>
+                            <li><i class="fas fa-check"></i> May reduce inflammation</li>
+                            <li><i class="fas fa-check"></i> Can help with gluten sensitivity symptoms</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dairy-Free Card -->
+            <div class="dietary-card">
+                <div class="card-header">
+                    <div class="card-icon"><i class="fas fa-ice-cream"></i></div>
+                    <h3 class="card-title">Dairy-Free</h3>
+                </div>
+                <div class="card-body">
+                    <p class="card-description">
+                        A diet that excludes milk and milk products from cows, goats, and sheep.
+                    </p>
+                    
+                    <div class="card-section">
+                        <h4 class="section-title"><i class="fas fa-check-circle"></i> Includes</h4>
+                        <ul class="food-list">
+                            <li>Plant-based milks (almond, soy, oat)</li>
+                            <li>Dairy-free cheeses</li>
+                            <li>Coconut yogurt</li>
+                            <li>All fruits and vegetables</li>
+                            <li>Meat and fish</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card-section">
+                        <h4 class="section-title"><i class="fas fa-times-circle"></i> Excludes</h4>
+                        <ul class="food-list">
+                            <li>Milk (whole, skim, etc.)</li>
+                            <li>Cheese</li>
+                            <li>Yogurt</li>
+                            <li>Butter</li>
+                            <li>Ice cream</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card-section">
+                        <h4 class="section-title"><i class="fas fa-heart"></i> Benefits</h4>
+                        <ul class="benefits-list">
+                            <li><i class="fas fa-check"></i> Essential for lactose intolerance</li>
+                            <li><i class="fas fa-check"></i> May improve skin conditions</li>
+                            <li><i class="fas fa-check"></i> Can reduce digestive discomfort</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Nut-Free Card -->
+            <div class="dietary-card">
+                <div class="card-header">
+                    <div class="card-icon"><i class="fas fa-allergies"></i></div>
+                    <h3 class="card-title">Nut-Free</h3>
+                </div>
+                <div class="card-body">
+                    <p class="card-description">
+                        A diet that excludes all tree nuts and peanuts to prevent allergic reactions.
+                    </p>
+                    
+                    <div class="card-section">
+                        <h4 class="section-title"><i class="fas fa-check-circle"></i> Includes</h4>
+                        <ul class="food-list">
+                            <li>Seeds (sunflower, pumpkin)</li>
+                            <li>Seed butters</li>
+                            <li>All fruits and vegetables</li>
+                            <li>Grains and legumes (except peanuts)</li>
+                            <li>Meat and dairy</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card-section">
+                        <h4 class="section-title"><i class="fas fa-times-circle"></i> Excludes</h4>
+                        <ul class="food-list">
+                            <li>Peanuts</li>
+                            <li>Tree nuts (almonds, walnuts, etc.)</li>
+                            <li>Nut butters</li>
+                            <li>Foods processed with nuts</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card-section">
+                        <h4 class="section-title"><i class="fas fa-heart"></i> Benefits</h4>
+                        <ul class="benefits-list">
+                            <li><i class="fas fa-check"></i> Essential for nut allergies</li>
+                            <li><i class="fas fa-check"></i> Prevents allergic reactions</li>
+                            <li><i class="fas fa-check"></i> Safer for nut-free environments</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Keto Card -->
+            <div class="dietary-card">
+                <div class="card-header">
+                    <div class="card-icon"><i class="fas fa-bacon"></i></div>
+                    <h3 class="card-title">Keto</h3>
+                </div>
+                <div class="card-body">
+                    <p class="card-description">
+                        A high-fat, adequate-protein, low-carbohydrate diet that forces the body to burn fats rather than carbohydrates.
+                    </p>
+                    
+                    <div class="card-section">
+                        <h4 class="section-title"><i class="fas fa-check-circle"></i> Includes</h4>
+                        <ul class="food-list">
+                            <li>Meat and poultry</li>
+                            <li>Fish and seafood</li>
+                            <li>Eggs</li>
+                            <li>Low-carb vegetables</li>
+                            <li>Healthy fats</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card-section">
+                        <h4 class="section-title"><i class="fas fa-times-circle"></i> Excludes</h4>
+                        <ul class="food-list">
+                            <li>Grains and starches</li>
+                            <li>Sugary foods</li>
+                            <li>Most fruits</li>
+                            <li>Legumes</li>
+                            <li>Root vegetables</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card-section">
+                        <h4 class="section-title"><i class="fas fa-heart"></i> Benefits</h4>
+                        <ul class="benefits-list">
+                            <li><i class="fas fa-check"></i> May promote weight loss</li>
+                            <li><i class="fas fa-check"></i> Can improve blood sugar control</li>
+                            <li><i class="fas fa-check"></i> May reduce seizures in epilepsy</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+     <!-- Footer -->
+     <footer class="site-footer">
+        <div class="footer-container">
+            <!-- Main Footer Content -->
+            <div class="footer-grid">
+                <!-- Company Info -->
+                <div class="footer-section">
+                    <h3 class="footer-heading">SmartRecipe</h3>
+                    <p class="footer-text">Transforming ingredients into perfect meals with AI-powered recommendations.
+                    </p>
+                    <div class="social-links">
+                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" aria-label="Pinterest"><i class="fab fa-pinterest-p"></i></a>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="footer-section">
+                    <h3 class="footer-heading">Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="/Frontend/Index.html">Home</a></li>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="/Frontend/Dietary.html">Dietary Options</a></li>
+                        <li><a href="/Frontend/Index.html">Recipe Search</a></li>
+                        <li><a href="/Frontend/signin.html">My Account</a></li>
+                    </ul>
+                </div>
+
+                <!-- Resources -->
+                <div class="footer-section">
+                    <h3 class="footer-heading">Resources</h3>
+                    <ul class="footer-links">
+                        <li><a href="#blog">Recipe Blog</a></li>
+                        <li><a href="#guides">Cooking Guides</a></li>
+                        <li><a href="#meal-plans">Meal Plans</a></li>
+                        <li><a href="#nutrition">Nutrition Info</a></li>
+                        <li><a href="#faq">FAQs</a></li>
+                    </ul>
+                </div>
+
+                <!-- Newsletter -->
+                <div class="footer-section">
+                    <h3 class="footer-heading">Newsletter</h3>
+                    <p class="footer-text">Subscribe for weekly recipe inspiration and cooking tips.</p>
+                    <form class="newsletter-form">
+                        <input type="email" placeholder="Your email address" required>
+                        <button type="submit">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Footer Bottom -->
+            <div class="footer-bottom">
+                <div class="copyright">
+                    &copy; 2023 SmartRecipe. All rights reserved.
+                </div>
+                <div class="legal-links">
+                    <a href="#privacy">Privacy Policy</a>
+                    <a href="#terms">Terms of Service</a>
+                    <a href="#cookies">Cookie Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script>
+          // Mobile Menu Toggle
+          const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('active');
+            mobileMenuBtn.innerHTML = mobileMenu.classList.contains('active') 
+                ? '<i class="fas fa-times"></i>' 
+                : '<i class="fas fa-bars"></i>';
+        });
+
+        // Navbar scroll effect
+        const navbar = document.querySelector('.navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Active link highlighting
+        const navLinks = document.querySelectorAll('.nav-link');
+        navLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                navLinks.forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

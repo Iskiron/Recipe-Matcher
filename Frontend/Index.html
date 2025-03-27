@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartRecipe | Smart Cooking Solutions</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Boldonse&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Boldonse&family=Fira+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+        :root {
+            --indigo-50: #eef2ff;
+            --indigo-100: #e0e7ff;
+            --indigo-600: #4f46e5;
+            --indigo-700: #4338ca;
+            --slate-200: #e2e8f0;
+            --slate-600: #475569;
+            --slate-800: #1e293b;
+            --white: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif, sans-serif;
+            font-weight: 400;
+            font-style: normal;
+
+        }
+
+        h1 {
+            font-family: "Boldonse", system-ui;
+            font-weight: 400;
+            font-style: normal;
+        }
+
+
+
+        body {
+            background-color: var(--white);
+            color: var(--slate-800);
+        }
+
+
+        /* Creative Navigation Bar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(238, 242, 255, 0.98) 100%);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all var(--transition-speed) ease;
+        }
+
+        .navbar.scrolled {
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            font-size: 1.75rem;
+            color: var(--indigo-600);
+            transition: transform 0.5s ease;
+        }
+
+        .logo:hover .logo-icon {
+            transform: rotate(15deg);
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(to right, var(--indigo-600), var(--indigo-700));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            transition: all var(--transition-speed) ease;
+            padding-right: 600px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .nav-link {
+            position: relative;
+            color: var(--slate-600);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 0;
+            transition: all var(--transition-speed) ease;
+        }
+
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background: linear-gradient(to right, var(--indigo-600), var(--indigo-700));
+            transition: width var(--transition-speed) ease;
+        }
+
+        .nav-link:hover {
+            color: var(--indigo-700);
+        }
+
+        .nav-link:hover::before {
+            width: 100%;
+        }
+
+        .nav-link.active {
+            color: var(--indigo-700);
+        }
+
+        .nav-link.active::before {
+            width: 100%;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .btn-signup {
+            padding: 0.5rem 1.25rem;
+            margin-left:30px;
+            background: linear-gradient(to right, var(--indigo-600), var(--indigo-700));
+            color: var(--white);
+            border: none;
+            border-radius: 0.375rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition-speed) ease;
+            box-shadow: 0 4px 6px rgba(79, 70, 229, 0.2);
+        }
+
+        .btn-signup:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(79, 70, 229, 0.3);
+        }
+
+        .btn-signup:active {
+            transform: translateY(0);
+        }
+
+        /* Mobile Menu */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--slate-600);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .mobile-menu {
+            position: fixed;
+            top: 70px;
+            left: 0;
+            width: 100%;
+            background: var(--white);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            padding: 1rem 2rem;
+            transform: translateY(-150%);
+            opacity: 0;
+            transition: all 0.4s ease;
+            z-index: 999;
+        }
+
+        .mobile-menu.active {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .mobile-nav-links {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .mobile-nav-link {
+            color: var(--slate-600);
+            text-decoration: none;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--slate-200);
+            transition: all var(--transition-speed) ease;
+        }
+
+        .mobile-nav-link:hover {
+            color: var(--indigo-700);
+            padding-left: 0.5rem;
+        }
+
+        .mobile-nav-actions {
+            margin-top: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+
+            .nav-links,
+            .nav-actions {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .nav-container {
+                padding: 0 1.5rem;
+            }
+        }
+
+        /* Scroll behavior */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Sample content to demonstrate scroll effect */
+        .content-section {
+            height: 100vh;
+            padding: 6rem 2rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--slate-600);
+        }
+
+
+        /* Hero Section */
+        .hero {
+            display: flex;
+            min-height: 100vh;
+            background-color: #0073cf;
+            background-image: linear-gradient(315deg, #0073cf 0%, #f2f0ef 74%);
+            padding: 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 4rem;
+            min-height: 100vh;
+        }
+
+        .hero-img {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            min-height: 100vh;
+        }
+
+        .hero-img img {
+            width: 80%;
+            height: 80%;
+            object-fit: cover;
+            object-position: center;
+            transition: transform 0.5s ease;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            color: var(--slate-800);
+            max-width: 600px;
+        }
+
+        #blue {
+            color: var(--indigo-700);
+            display: inline-block;
+            position: relative;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2.5rem;
+            color: var(--slate-600);
+            max-width: 500px;
+        }
+
+        /* Centered CTA Button */
+        .cta-button {
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+            border-radius: 0.75rem;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 4rem 2rem;
+            background: var(--white);
+        }
+
+        .features-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            padding: 2rem;
+            border-radius: 1rem;
+            background: var(--white);
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--indigo-700);
+            margin-bottom: 1rem;
+        }
+
+        /* How It Works */
+        .steps-section {
+            padding: 4rem 2rem;
+            background: var(--indigo-50);
+        }
+
+        .steps-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .step-card {
+            text-align: center;
+            padding: 2rem;
+            background: var(--white);
+            border-radius: 1rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+        }
+
+        .step-number {
+            width: 50px;
+            height: 50px;
+            background: var(--indigo-600);
+            color: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-weight: 600;
+        }
+
+        /* Dietary Section */
+        .dietary-section {
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        .dietary-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+            max-width: 800px;
+            margin: 2rem auto;
+        }
+
+        .diet-tag {
+            padding: 0.5rem 1rem;
+            background: var(--indigo-100);
+            color: var(--indigo-700);
+            border-radius: 2rem;
+            font-size: 0.9rem;
+            transition: transform 0.2s ease;
+        }
+
+        .diet-tag:hover {
+            transform: scale(1.05);
+        }
+
+        /* Footer Styles */
+        .site-footer {
+            background-color: var(--slate-800);
+            color: var(--white);
+            padding: 3rem 0 0;
+            margin-top: 3rem;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-heading {
+            color: var(--white);
+            font-size: 1.1rem;
+            margin-bottom: 1.25rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .footer-heading::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 40px;
+            height: 2px;
+            background-color: var(--indigo-600);
+        }
+
+        .footer-text {
+            color: var(--slate-200);
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-links a {
+            color: var(--slate-200);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--indigo-100);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--white);
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background-color: var(--indigo-600);
+            transform: translateY(-3px);
+        }
+
+        .newsletter-form {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .newsletter-form input {
+            padding: 0.75rem 1rem;
+            border: none;
+            border-radius: 4px;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--white);
+        }
+
+        .newsletter-form input::placeholder {
+            color: var(--slate-200);
+        }
+
+        .newsletter-form button {
+            padding: 0.75rem;
+            background-color: var(--indigo-600);
+            color: var(--white);
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .newsletter-form button:hover {
+            background-color: var(--indigo-700);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1.5rem 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .copyright {
+            color: var(--slate-400);
+            font-size: 0.875rem;
+        }
+
+        .legal-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .legal-links a {
+            color: var(--slate-400);
+            font-size: 0.875rem;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .legal-links a:hover {
+            color: var(--indigo-100);
+        }
+
+        @media (min-width: 768px) {
+            .footer-bottom {
+                flex-direction: row;
+            }
+
+            .footer-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .hero {
+                flex-direction: column;
+            }
+
+            .content,
+            .hero-img {
+                flex: none;
+                width: 100%;
+                padding: 2rem;
+            }
+
+            .content {
+                order: 2;
+                text-align: center;
+                padding: 4rem 2rem;
+            }
+
+            .hero-img {
+                order: 1;
+                height: 50vh;
+            }
+
+            h1 {
+                font-size: 2.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .hero {
+                flex-direction: column;
+                min-height: auto;
+            }
+
+            .content,
+            .hero-img {
+                flex: none;
+                width: 100%;
+                min-height: auto;
+                padding: 4rem 2rem;
+            }
+
+            .content {
+                align-items: center;
+                text-align: center;
+                order: 2;
+            }
+
+            .hero-img {
+                order: 1;
+                height: 60vh;
+            }
+
+            h1 {
+                font-size: 2.5rem;
+                max-width: none;
+            }
+
+            .hero p {
+                max-width: 600px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .content,
+            .hero-img {
+                padding: 2rem;
+            }
+        }
+
+        .cta-button {
+            padding: 0.5rem 1.5rem;
+            background: var(--indigo-600);
+            color: var(--white);
+            border-radius: 0.5rem;
+            text-decoration: none;
+            transition: background 0.3s ease;
+        }
+
+        .cta-button:hover {
+            background: var(--indigo-700);
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="home.html" class="logo">
+                <i class="fas fa-utensils logo-icon"></i>
+                <span class="logo-text">SmartRecipe</span>
+            </a>
+
+            <div class="nav-links">
+                <a href="#features" class="nav-link">Features</a>
+                <a href="#how-it-works" class="nav-link">How it works</a>
+            </div>
+
+            <div class="nav-actions">
+                <a href="signin.html" class="nav-link">Login</a>
+                <a href="signup.html"><button class="btn-signup">Sign Up</button></a>
+            </div>
+
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div class="mobile-menu" id="mobileMenu">
+            <div class="mobile-nav-links">
+                <a href="#features" class="nav-link">Features</a>
+                <a href="#how-it-works" class="nav-link">How it works</a>
+            </div>
+            <div class="mobile-nav-actions">
+                <a href="#login" class="mobile-nav-link">Login</a>
+                <a href="signup.html"><button class="btn-signup">Sign Up</button></a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="content">
+                <h1>Transform Your <span id="blue">Cooking</span> Experience</h1>
+                <p>Discover AI-powered recipe solutions that help you create delicious meals while reducing food waste
+                </p>
+                <div style="margin-top: 2.5rem;">
+                    <a href="signup.html" class="cta-button">Start Your Journey</a>
+                </div>
+            </div>
+            <div class="hero-img">
+                <img src="https://www.pngmart.com/files/7/Fresh-Healthy-Food-PNG-Pic.png"
+                    alt="Fresh ingredients and cooking tools">
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="features-grid">
+            <div class="feature-card">
+                <i class="fas fa-search feature-icon"></i>
+                <h3>Smart Ingredient Matching</h3>
+                <p>Find recipes based on ingredients you already have in your kitchen</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-heart feature-icon"></i>
+                <h3>Dietary Restrictions</h3>
+                <p>Custom filters for vegan, gluten-free, keto, and other dietary needs</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-chart-line feature-icon"></i>
+                <h3>Waste Reduction</h3>
+                <p>Smart suggestions to help reduce food waste and save money</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="steps-section" id="how-it-works">
+        <div class="steps-grid">
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <h3>Sign Up</h3>
+                <p>Create your free account in less than a minute</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <h3>Set Preferences</h3>
+                <p>Tell us about your dietary needs and preferences</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <h3>Start Cooking</h3>
+                <p>Discover recipes tailored just for you</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dietary Section -->
+    <section class="dietary-section" id="diets">
+        <h2>Supported Dietary Requirements</h2>
+        <div class="dietary-tags">
+            <span class="diet-tag">Vegetarian</span>
+            <span class="diet-tag">Vegan</span>
+            <span class="diet-tag">Gluten-Free</span>
+            <span class="diet-tag">Dairy-Free</span>
+            <span class="diet-tag">Nut-Free</span>
+            <span class="diet-tag">Keto</span>
+            <span class="diet-tag">Paleo</span>
+            <span class="diet-tag">Low-Carb</span>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="footer-container">
+            <!-- Main Footer Content -->
+            <div class="footer-grid">
+                <!-- Company Info -->
+                <div class="footer-section">
+                    <h3 class="footer-heading">SmartRecipe</h3>
+                    <p class="footer-text">Transforming ingredients into perfect meals with AI-powered recommendations.
+                    </p>
+                    <div class="social-links">
+                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" aria-label="Pinterest"><i class="fab fa-pinterest-p"></i></a>
+                    </div>
+                </div
+
+                <!-- Resources -->
+                <div class="footer-section">
+                    <h3 class="footer-heading">Resources</h3>
+                    <ul class="footer-links">
+                        <li><a href="#blog">Recipe Blog</a></li>
+                        <li><a href="#guides">Cooking Guides</a></li>
+                        <li><a href="#meal-plans">Meal Plans</a></li>
+                        <li><a href="#nutrition">Nutrition Info</a></li>
+                        <li><a href="#faq">FAQs</a></li>
+                    </ul>
+                </div>
+
+                <!-- Newsletter -->
+                <div class="footer-section">
+                    <h3 class="footer-heading">Newsletter</h3>
+                    <p class="footer-text">Subscribe for weekly recipe inspiration and cooking tips.</p>
+                    <form class="newsletter-form">
+                        <input type="email" placeholder="Your email address" required>
+                        <button type="submit">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Footer Bottom -->
+            <div class="footer-bottom">
+                <div class="copyright">
+                    &copy; 2023 SmartRecipe. All rights reserved.
+                </div>
+                <div class="legal-links">
+                    <a href="#privacy">Privacy Policy</a>
+                    <a href="#terms">Terms of Service</a>
+                    <a href="#cookies">Cookie Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+
+    <script>
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
