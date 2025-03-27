@@ -1,12 +1,12 @@
-<!-- results.html -->
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SmartRecipe - Recipe Results</title>
+    <title>Recipe Detail | SmartRecipe</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         :root {
             --indigo-50: #eef2ff;
@@ -29,6 +29,7 @@
         body {
             background-color: var(--indigo-50);
             color: var(--slate-800);
+            line-height: 1.6;
         }
 
         /* Creative Navigation Bar */
@@ -245,101 +246,157 @@
             color: var(--slate-600);
         }
 
-        /* Results Page Specific Styles */
-        .results-container {
+
+        /* Recipe Detail Page */
+        .recipe-detail-container {
             max-width: 1200px;
             margin: 6rem auto 3rem;
             padding: 0 2rem;
         }
 
-        .results-header {
-            margin-bottom: 2rem;
+        .recipe-header {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 3rem;
+            margin-bottom: 3rem;
         }
 
-        .results-title {
-            font-size: 1.75rem;
-            color: var(--slate-800);
-            margin-bottom: 0.5rem;
-        }
-
-        .search-query {
-            color: var(--indigo-700);
-            font-weight: 500;
-        }
-
-        .recipes-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
-        .recipe-card {
-            background: var(--white);
-            border-radius: 0.75rem;
-            overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .recipe-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+        .recipe-image-container {
+            flex: 1;
+            min-width: 300px;
         }
 
         .recipe-image {
             width: 100%;
-            height: 200px;
-            object-fit: cover;
+            border-radius: 1rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
         }
 
-        .recipe-content {
-            padding: 1.5rem;
+        .recipe-info {
+            flex: 1;
+            min-width: 300px;
         }
 
         .recipe-title {
-            font-size: 1.25rem;
-            margin-bottom: 0.75rem;
+            font-size: 2rem;
+            margin-bottom: 1rem;
             color: var(--slate-800);
         }
 
         .recipe-meta {
             display: flex;
-            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
             color: var(--slate-600);
-            margin-bottom: 1rem;
-            font-size: 0.875rem;
+        }
+
+        .meta-item i {
+            color: var(--indigo-600);
         }
 
         .recipe-dietary {
             display: flex;
             flex-wrap: wrap;
             gap: 0.5rem;
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
         }
 
         .dietary-tag {
             background: var(--indigo-100);
             color: var(--indigo-700);
-            padding: 0.25rem 0.5rem;
-            border-radius: 0.25rem;
-            font-size: 0.75rem;
+            padding: 0.5rem 1rem;
+            border-radius: 1rem;
+            font-size: 0.875rem;
             font-weight: 500;
         }
 
-        .view-recipe {
-            display: inline-block;
-            padding: 0.5rem 1rem;
+        .recipe-summary {
+            margin-bottom: 2rem;
+            color: var(--slate-600);
+        }
+
+        .recipe-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 3rem;
+        }
+
+        .ingredients-section,
+        .instructions-section {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--indigo-700);
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(to right, var(--indigo-600), var(--indigo-700));
+        }
+
+        .ingredients-list {
+            list-style-type: none;
+        }
+
+        .ingredient-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+            padding: 0.75rem;
+            background: var(--white);
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .ingredient-item i {
+            color: var(--indigo-600);
+        }
+
+        .instructions-list {
+            list-style-type: none;
+            counter-reset: step-counter;
+        }
+
+        .instruction-item {
+            counter-increment: step-counter;
+            margin-bottom: 1.5rem;
+            padding-left: 3rem;
+            position: relative;
+        }
+
+        .instruction-item::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 2rem;
+            height: 2rem;
             background: var(--indigo-600);
             color: var(--white);
-            border-radius: 0.25rem;
-            text-decoration: none;
-            font-weight: 500;
-            transition: background 0.3s ease;
-        }
-
-        .view-recipe:hover {
-            background: var(--indigo-700);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
         }
 
         .loading {
@@ -349,15 +406,13 @@
             color: var(--slate-600);
         }
 
-        .error-message {
-            color: #ef4444;
-            text-align: center;
-            padding: 2rem;
-        }
-
         @media (max-width: 768px) {
-            .recipes-grid {
-                grid-template-columns: 1fr;
+            .recipe-header {
+                flex-direction: column;
+            }
+
+            .recipe-image-container {
+                order: -1;
             }
         }
 
@@ -523,6 +578,7 @@
                 grid-template-columns: repeat(4, 1fr);
             }
         }
+
         .user-info {
             position: relative;
             cursor: pointer;
@@ -576,33 +632,39 @@
         }
 
         .logout-link {
-    display: block;
-    margin-top: 0.75rem;
-    padding: 0.5rem 1rem;
-    background-color: var(--indigo-100);
-    color: var(--indigo-700);
-    text-align: center;
-    border-radius: 0.375rem;
-    text-decoration: none;
-    font-weight: 500;
-    transition: all 0.2s ease;
-}
+            display: block;
+            margin-top: 0.75rem;
+            padding: 0.5rem 1rem;
+            background-color: var(--indigo-100);
+            color: var(--indigo-700);
+            text-align: center;
+            border-radius: 0.375rem;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
 
-.logout-link:hover {
-    background-color: var(--indigo-600);
-    color: var(--white);
-}
+        .logout-link:hover {
+            background-color: var(--indigo-600);
+            color: var(--white);
+        }
 
-.user-details {
-    /* Existing styles */
-    padding: 1rem 1.5rem; /* Increase padding to accommodate new button */
-}
+        .user-details {
+            /* Existing styles */
+            padding: 1rem 1.5rem;
+            /* Increase padding to accommodate new button */
+        }
     </style>
 </head>
 
 <body>
-      <!-- Creative Navigation Bar -->
-      <nav class="navbar">
+    {% if error %}
+    <div class="error-message">
+        {{ error }}
+    </div>
+    {% endif %}
+    <!-- Creative Navigation Bar -->
+    <nav class="navbar">
         <div class="nav-container">
             <a href="#" class="logo">
                 <i class="fas fa-utensils logo-icon"></i>
@@ -652,140 +714,96 @@
         </div>
     </nav>
 
-    <div class="results-container">
-        <div class="results-header">
-            <h1 class="results-title">Recipe Results</h1>
-            <p>Showing recipes for: <span class="search-query">{{ ingredients }}</span></p>
-        </div>
-
-        {% if recipes %}
-        <div class="recipes-grid">
-            {% for recipe in recipes %}
-            <div class="recipe-card">
-                <img src="{{ recipe.image or 'https://spoonacular.com/recipeImages/placeholder-636x393.jpg' }}"
-                    class="recipe-image" alt="{{ recipe.title }}">
-                <div class="recipe-content">
-                    <h3 class="recipe-title">{{ recipe.title }}</h3>
+    <div class="recipe-detail-container">
+        <div class="recipe-content">
+            <div class="recipe-header">
+                <div class="recipe-image-container">
+                    <img src="{{ recipe.image }}" alt="{{ recipe.title }}" class="recipe-image">
+                </div>
+                <div class="recipe-info">
+                    <h1 class="recipe-title">{{ recipe.title }}</h1>
                     <div class="recipe-meta">
-                        <span>Ready in {{ recipe.readyInMinutes }} mins</span>
-                        <span>{{ recipe.servings }} servings</span>
+                        <div class="meta-item">
+                            <i class="fas fa-clock"></i>
+                            <span>{{ recipe.readyInMinutes }} mins</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-utensils"></i>
+                            <span>{{ recipe.servings }} servings</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-fire"></i>
+                            <span>{{ recipe.healthScore }} health score</span>
+                        </div>
                     </div>
-                    {% if recipe.vegetarian or recipe.vegan or recipe.glutenFree %}
+                    {% if recipe.vegetarian or recipe.vegan or recipe.glutenFree or recipe.dairyFree %}
                     <div class="recipe-dietary">
                         {% if recipe.vegetarian %}<span class="dietary-tag">Vegetarian</span>{% endif %}
                         {% if recipe.vegan %}<span class="dietary-tag">Vegan</span>{% endif %}
                         {% if recipe.glutenFree %}<span class="dietary-tag">Gluten Free</span>{% endif %}
+                        {% if recipe.dairyFree %}<span class="dietary-tag">Dairy Free</span>{% endif %}
                     </div>
                     {% endif %}
-                    <a href="{{ url_for('recipe_detail', recipe_id=recipe.id) }}" class="view-recipe">View Recipe</a>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-        {% else %}
-        <div class="error-message">No recipes found for these ingredients. Try different ingredients.</div>
-        {% endif %}
-    </div>
-
-    <!-- Footer -->
-    <footer class="site-footer">
-        <div class="footer-container">
-            <!-- Main Footer Content -->
-            <div class="footer-grid">
-                <!-- Company Info -->
-                <div class="footer-section">
-                    <h3 class="footer-heading">SmartRecipe</h3>
-                    <p class="footer-text">Transforming ingredients into perfect meals with AI-powered recommendations.
-                    </p>
-                    <div class="social-links">
-                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
-                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-                        <a href="#" aria-label="Pinterest"><i class="fab fa-pinterest-p"></i></a>
+                    <div class="recipe-summary">
+                        {{ recipe.summary|safe }}
                     </div>
                 </div>
-
-                <!-- Quick Links -->
-                <div class="footer-section">
-                    <h3 class="footer-heading">Quick Links</h3>
-                    <ul class="footer-links">
-                        <li><a href="/Frontend/Index.html">Home</a></li>
-                        <li><a href="#features">Features</a></li>
-                        <li><a href="/Frontend/Dietary.html">Dietary Options</a></li>
-                        <li><a href="/Frontend/Index.html">Recipe Search</a></li>
-                        <li><a href="/Frontend/signin.html">My Account</a></li>
-                    </ul>
-                </div>
-
-                <!-- Resources -->
-                <div class="footer-section">
-                    <h3 class="footer-heading">Resources</h3>
-                    <ul class="footer-links">
-                        <li><a href="#blog">Recipe Blog</a></li>
-                        <li><a href="#guides">Cooking Guides</a></li>
-                        <li><a href="#meal-plans">Meal Plans</a></li>
-                        <li><a href="#nutrition">Nutrition Info</a></li>
-                        <li><a href="#faq">FAQs</a></li>
-                    </ul>
-                </div>
-
-                <!-- Newsletter -->
-                <div class="footer-section">
-                    <h3 class="footer-heading">Newsletter</h3>
-                    <p class="footer-text">Subscribe for weekly recipe inspiration and cooking tips.</p>
-                    <form class="newsletter-form">
-                        <input type="email" placeholder="Your email address" required>
-                        <button type="submit">Subscribe</button>
-                    </form>
-                </div>
             </div>
 
-            <!-- Footer Bottom -->
-            <div class="footer-bottom">
-                <div class="copyright">
-                    &copy; 2023 SmartRecipe. All rights reserved.
+            <div class="nutrition-facts">
+                <h3 class="section-title">Nutrition Facts</h3>
+                <ul class="list-unstyled">
+                    {% for nutrient in nutrition.nutrients %}
+                    <li class="d-flex justify-content-between py-1">
+                        <span>{{ nutrient.name }}</span>
+                        <span>{{ nutrient.amount|round }} {{ nutrient.unit }}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            
+
+            <div class="recipe-sections">
+                <div class="ingredients-section">
+                    <h2 class="section-title">Ingredients</h2>
+                    <ul class="ingredients-list">
+                        {% for ingredient in recipe.extendedIngredients %}
+                        <li class="ingredient-item">
+                            <i class="fas fa-circle"></i>
+                            <span>{{ ingredient.original }}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
                 </div>
-                <div class="legal-links">
-                    <a href="#privacy">Privacy Policy</a>
-                    <a href="#terms">Terms of Service</a>
-                    <a href="#cookies">Cookie Policy</a>
+
+                <div class="instructions-section">
+                    <h2 class="section-title">Instructions</h2>
+                    <ol class="instructions-list">
+                        {% if instructions %}
+                        {% for instruction in instructions %}
+                        {% for step in instruction.steps %}
+                        <li class="instruction-item">
+                            <div class="step-number">{{ step.number }}</div>
+                            <div>{{ step.step }}</div>
+                        </li>
+                        {% endfor %}
+                        {% endfor %}
+                        {% else %}
+                        <li class="instruction-item">No instructions available</li>
+                        {% endif %}
+                    </ol>
                 </div>
             </div>
         </div>
+    </div>
+
+    <!-- Footer (keep original structure) -->
+    <footer class="site-footer">
+        <!-- ... (Keep existing footer content) ... -->
     </footer>
 
-    <script>
-        // Mobile Menu Toggle
-        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-        const mobileMenu = document.getElementById('mobileMenu');
 
-        mobileMenuBtn.addEventListener('click', () => {
-            mobileMenu.classList.toggle('active');
-            mobileMenuBtn.innerHTML = mobileMenu.classList.contains('active')
-                ? '<i class="fas fa-times"></i>'
-                : '<i class="fas fa-bars"></i>';
-        });
-
-        // Navbar scroll effect
-        const navbar = document.querySelector('.navbar');
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 50) {
-                navbar.classList.add('scrolled');
-            } else {
-                navbar.classList.remove('scrolled');
-            }
-        });
-
-        // Active link highlighting
-        const navLinks = document.querySelectorAll('.nav-link');
-        navLinks.forEach(link => {
-            link.addEventListener('click', function () {
-                navLinks.forEach(l => l.classList.remove('active'));
-                this.classList.add('active');
-            });
-        });
-
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

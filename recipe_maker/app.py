@@ -76,29 +76,24 @@ def signup():
         return redirect(url_for("signup_page"))
 
 # Login Route
-@app.route("/login", methods=["GET", "POST"])  # Allow both GET and POST
+@app.route("/login", methods=["POST"])
 def login():
-    if request.method == "GET":
-        # Redirect to the login page route
-        return redirect(url_for("login_page"))
-    
-    # Existing POST handling code below
-    email = request.form.get("email") or request.json.get("email")
-    password = request.form.get("password") or request.json.get("password")
+    email = request.form.get("email")
+    password = request.form.get("password")
 
     user = User.query.filter_by(email=email).first()
 
-    # Fix password check (use bcrypt.check_password_hash)
     if user and bcrypt.check_password_hash(user.password, password):
         login_user(user)
-        return jsonify({"message": "Login successful", "status": "success"}), 200
+        return redirect(url_for("index"))
     else:
-        return jsonify({"message": "Invalid email or password", "status": "fail"}), 401
+        flash("Invalid email or password", "danger")
+        return redirect(url_for("login_page"))
 
 @app.route("/index")
 def index():
-    email = request.args.get("email")  # Get the email from query parameters
-    return render_template("Index.html", email=email) 
+    return render_template("index.html")
+
 
 @app.route("/dashboard")
 @login_required
@@ -120,6 +115,22 @@ def signup_page():
 @app.route("/login-page")
 def login_page():
     return render_template("login.html") 
+
+@app.route('/')
+def home():
+    return render_template('landingpage.html')  # Your main page template
+
+@app.route('/dietary')
+def dietary():
+    return render_template('dietary.html')  # Or your dietary template name
+
+@app.route('/about')
+def about():
+    return render_template('about.html')  # Or your about template name
+
+@app.route('/community')
+def community():
+    return render_template('community.html')  # Or your community template name
 
 # Valid dietary filters (add this)
 VALID_DIETS = {
@@ -174,7 +185,42 @@ def search_recipes():
         return redirect(url_for("index"))
 
 @app.route("/recipe/<int:recipe_id>")
-def recipe_details(recipe_id):
+def recipe_detail(recipe_id):
+    try:
+        # Get main recipe data
+        recipe_response = requests.get(
+            f"https://api.spoonacular.com/recipes/{recipe_id}/information",
+            params={"apiKey": SPOONACULAR_API_KEY, "includeNutrition": True}
+        )
+        recipe_response.raise_for_status()
+        recipe_data = recipe_response.json()
+
+        # Get analyzed instructions
+        instructions_response = requests.get(
+            f"https://api.spoonacular.com/recipes/{recipe_id}/analyzedInstructions",
+            params={"apiKey": SPOONACULAR_API_KEY}
+        )
+        instructions_data = instructions_response.json() if instructions_response.ok else []
+
+        # Get nutrition data
+        nutrition_response = requests.get(
+            f"https://api.spoonacular.com/recipes/{recipe_id}/nutritionWidget.json",
+            params={"apiKey": SPOONACULAR_API_KEY}
+        )
+        nutrition_data = nutrition_response.json() if nutrition_response.ok else {}
+
+        return render_template(
+            "recipe_detail.html",
+            recipe=recipe_data,
+            instructions=instructions_data,
+            nutrition=nutrition_data.get('nutrients', [])
+        )
+        
+    except requests.exceptions.HTTPError as e:
+        return render_template("error.html", error_message="Recipe not found"), 404
+    except Exception as e:
+        return render_template("error.html", error_message=str(e)), 500
+
     # Get basic recipe information
     info_url = f"https://api.spoonacular.com/recipes/{recipe_id}/information"
     params = {
@@ -198,7 +244,7 @@ def recipe_details(recipe_id):
         nutrition_data = nutrition_response.json()
 
         return render_template(
-            "recipe_details.html",
+            "recipe_detail.html",
             recipe=recipe_data,
             instructions=instructions_data,
             nutrition=nutrition_data

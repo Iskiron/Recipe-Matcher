@@ -403,33 +403,23 @@
             justify-content: center;
         }
 
-
-
-        .diet-filter:hover {
-            border-color: var(--indigo-600);
-        }
-
-        /* Modify existing diet-filter class */
         .diet-filter {
             padding: 0.5rem 1.25rem;
             background-color: var(--white);
-            border: 1px solid var(--slate-200);
+            border: 1px solid var(--slate-900);
             border-radius: 0.9rem;
             cursor: pointer;
             transition: all 0.2s;
-            position: relative;
+        }
+
+        .diet-filter:hover {
+            border-color: var(--indigo-600);
         }
 
         .diet-filter.active {
             background-color: var(--indigo-50);
             border-color: var(--indigo-600);
             color: var(--indigo-700);
-        }
-
-        /* Add checkmark for active filters */
-        .diet-filter.active::after {
-            margin-left: 0.5rem;
-            color: var(--indigo-600);
         }
 
         /* How It Works */
@@ -628,6 +618,81 @@
                 grid-template-columns: repeat(4, 1fr);
             }
         }
+
+        .user-info {
+            position: relative;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .greeting {
+            color: var(--indigo-700);
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            transition: all 0.2s ease;
+        }
+
+        .user-info:hover .greeting {
+            background-color: var(--indigo-50);
+        }
+
+        .user-details {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: var(--white);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s ease;
+            min-width: 200px;
+            z-index: 1000;
+        }
+
+        .user-info:hover .user-details {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(5px);
+        }
+
+        .user-details p {
+            color: var(--slate-600);
+            font-size: 0.875rem;
+            margin: 0.25rem 0;
+        }
+
+        .user-details p:first-child {
+            font-weight: 600;
+            color: var(--slate-900);
+        }
+
+        .logout-link {
+    display: block;
+    margin-top: 0.75rem;
+    padding: 0.5rem 1rem;
+    background-color: var(--indigo-100);
+    color: var(--indigo-700);
+    text-align: center;
+    border-radius: 0.375rem;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.logout-link:hover {
+    background-color: var(--indigo-600);
+    color: var(--white);
+}
+
+.user-details {
+    /* Existing styles */
+    padding: 1rem 1.5rem; /* Increase padding to accommodate new button */
+}
     </style>
 </head>
 
@@ -635,21 +700,32 @@
     <!-- Creative Navigation Bar -->
     <nav class="navbar">
         <div class="nav-container">
-            <a href="home.html" class="logo">
+            <a href="#" class="logo">
                 <i class="fas fa-utensils logo-icon"></i>
                 <span class="logo-text">SmartRecipe</span>
             </a>
 
             <div class="nav-links">
-                <a href="Index.html" class="nav-link active">Home</a>
-                <a href="Dietary.html" class="nav-link">Dietary</a>
-                <a href="about.html" class="nav-link">About</a>
-                <a href="contact.html" class="nav-link">Contact</a>
+                <a href="{{ url_for('index') }}" class="nav-link ">Home</a>
+                <a href="{{ url_for('dietary') }}" class="nav-link">Dietary</a>
+                <a href="{{ url_for('about') }}" class="nav-link">About</a>
+                <a href="{{ url_for('community') }}" class="nav-link">Community</a>
             </div>
 
             <div class="nav-actions">
-                <a href="signin.html" class="nav-link">Login</a>
-                <a href="signup.html"><button class="btn-signup">Sign Up</button></a>
+                {% if current_user.is_authenticated %}
+                <div class="user-info">
+                    <span class="greeting">Hi, {{ current_user.username }}</span>
+                    <div class="user-details">
+                        <p>{{ current_user.username }}</p>
+                        <p>{{ current_user.email }}</p>
+                        <a href="{{ url_for('logout') }}" class="logout-link">Log Out</a>
+                    </div>
+                </div>
+                {% else %}
+                <a href="{{ url_for('login_page') }}" class="nav-link">Login</a>
+                <a href="{{ url_for('signup_page') }}"><button class="btn-signup">Sign Up</button></a>
+                {% endif %}
             </div>
 
             <button class="mobile-menu-btn" id="mobileMenuBtn">
@@ -663,7 +739,7 @@
                 <a href="home.html" class="mobile-nav-link">Home</a>
                 <a href="dietary.html" class="mobile-nav-link">Dietary</a>
                 <a href="about.html" class="mobile-nav-link">About</a>
-                <a href="contact.html" class="mobile-nav-link">Contact</a>
+                <a href="community.html" class="mobile-nav-link">Community</a>
             </div>
             <div class="mobile-nav-actions">
                 <a href="#login" class="mobile-nav-link">Login</a>
@@ -700,12 +776,9 @@
 
             <form id="recipeSearchForm" class="search-form" method="GET" action="/search">
                 <input type="hidden" name="diet" id="dietFiltersInput">
-                <input type="text" 
-                       id="ingredientsInput" 
-                       name="ingredients"
-                       placeholder="Enter ingredients (comma separated, e.g., chicken, broccoli, rice)"
-                       class="search-input" 
-                       required>
+                <input type="text" id="ingredientsInput" name="ingredients"
+                    placeholder="Enter ingredients (comma separated, e.g., chicken, broccoli, rice)"
+                    class="search-input" required>
                 <button type="submit" class="search-button">Find recipes</button>
             </form>
         </div>

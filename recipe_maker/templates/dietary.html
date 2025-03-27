@@ -1,11 +1,9 @@
-<!-- results.html -->
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SmartRecipe - Recipe Results</title>
+    <title>SmartRecipe - Dietary Preferences</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
@@ -31,14 +29,14 @@
             color: var(--slate-800);
         }
 
-        /* Creative Navigation Bar */
-        .navbar {
+         /* Creative Navigation Bar */
+         .navbar {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             z-index: 1000;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(238, 242, 255, 0.98) 100%);
+            background: linear-gradient(135deg, rgba(255,255,255,0.98) 0%, rgba(238,242,255,0.98) 100%);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
@@ -214,9 +212,7 @@
 
         /* Responsive Styles */
         @media (max-width: 768px) {
-
-            .nav-links,
-            .nav-actions {
+            .nav-links, .nav-actions {
                 display: none;
             }
 
@@ -245,124 +241,146 @@
             color: var(--slate-600);
         }
 
-        /* Results Page Specific Styles */
-        .results-container {
+
+        /* Dietary Page Specific Styles */
+        .dietary-container {
             max-width: 1200px;
             margin: 6rem auto 3rem;
             padding: 0 2rem;
         }
 
-        .results-header {
-            margin-bottom: 2rem;
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
         }
 
-        .results-title {
-            font-size: 1.75rem;
+        .page-title {
+            font-size: 2rem;
             color: var(--slate-800);
-            margin-bottom: 0.5rem;
+            margin-bottom: 1rem;
         }
 
-        .search-query {
-            color: var(--indigo-700);
-            font-weight: 500;
+        .page-description {
+            color: var(--slate-600);
+            max-width: 700px;
+            margin: 0 auto;
         }
 
-        .recipes-grid {
+        .dietary-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
             gap: 2rem;
-            margin-top: 2rem;
         }
 
-        .recipe-card {
+        .dietary-card {
             background: var(--white);
             border-radius: 0.75rem;
             overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
-        .recipe-card:hover {
+        .dietary-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.12);
         }
 
-        .recipe-image {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
+        .card-header {
+            background-color: var(--indigo-600);
+            color: var(--white);
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
         }
 
-        .recipe-content {
+        .card-icon {
+            font-size: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .card-body {
             padding: 1.5rem;
         }
 
-        .recipe-title {
-            font-size: 1.25rem;
-            margin-bottom: 0.75rem;
+        .card-description {
+            color: var(--slate-600);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .card-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .section-title {
+            font-weight: 600;
             color: var(--slate-800);
-        }
-
-        .recipe-meta {
+            margin-bottom: 0.5rem;
             display: flex;
-            justify-content: space-between;
-            color: var(--slate-600);
-            margin-bottom: 1rem;
-            font-size: 0.875rem;
-        }
-
-        .recipe-dietary {
-            display: flex;
-            flex-wrap: wrap;
+            align-items: center;
             gap: 0.5rem;
-            margin-bottom: 1rem;
         }
 
-        .dietary-tag {
-            background: var(--indigo-100);
-            color: var(--indigo-700);
-            padding: 0.25rem 0.5rem;
-            border-radius: 0.25rem;
-            font-size: 0.75rem;
-            font-weight: 500;
+        .section-title i {
+            color: var(--indigo-600);
         }
 
-        .view-recipe {
-            display: inline-block;
-            padding: 0.5rem 1rem;
-            background: var(--indigo-600);
-            color: var(--white);
-            border-radius: 0.25rem;
-            text-decoration: none;
-            font-weight: 500;
-            transition: background 0.3s ease;
-        }
-
-        .view-recipe:hover {
-            background: var(--indigo-700);
-        }
-
-        .loading {
-            text-align: center;
-            padding: 2rem;
-            font-size: 1.25rem;
+        .section-content {
             color: var(--slate-600);
+            padding-left: 1.75rem;
+            line-height: 1.6;
         }
 
-        .error-message {
-            color: #ef4444;
-            text-align: center;
-            padding: 2rem;
+        .food-list {
+            list-style-type: none;
+        }
+
+        .food-list li {
+            margin-bottom: 0.5rem;
+            position: relative;
+            padding-left: 1.5rem;
+        }
+
+        .food-list li::before {
+            content: "•";
+            color: var(--indigo-600);
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        .benefits-list {
+            list-style-type: none;
+        }
+
+        .benefits-list li {
+            margin-bottom: 0.75rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .benefits-list i {
+            color: var(--indigo-600);
+            margin-top: 0.2rem;
         }
 
         @media (max-width: 768px) {
-            .recipes-grid {
+            .dietary-grid {
                 grid-template-columns: 1fr;
+            }
+            
+            .nav-links {
+                display: none;
             }
         }
 
-        /* Footer Styles */
-        .site-footer {
+          /* Footer Styles */
+          .site-footer {
             background-color: var(--slate-800);
             color: var(--white);
             padding: 3rem 0 0;
@@ -597,12 +615,12 @@
     /* Existing styles */
     padding: 1rem 1.5rem; /* Increase padding to accommodate new button */
 }
+
     </style>
 </head>
-
 <body>
-      <!-- Creative Navigation Bar -->
-      <nav class="navbar">
+     <!-- Creative Navigation Bar -->
+     <nav class="navbar">
         <div class="nav-container">
             <a href="#" class="logo">
                 <i class="fas fa-utensils logo-icon"></i>
@@ -652,43 +670,280 @@
         </div>
     </nav>
 
-    <div class="results-container">
-        <div class="results-header">
-            <h1 class="results-title">Recipe Results</h1>
-            <p>Showing recipes for: <span class="search-query">{{ ingredients }}</span></p>
+    <div class="dietary-container">
+        <div class="page-header">
+            <h1 class="page-title">Dietary Preferences</h1>
+            <p class="page-description">
+                Select your dietary preferences to get personalized recipe recommendations. 
+                Learn more about each dietary option below.
+            </p>
         </div>
 
-        {% if recipes %}
-        <div class="recipes-grid">
-            {% for recipe in recipes %}
-            <div class="recipe-card">
-                <img src="{{ recipe.image or 'https://spoonacular.com/recipeImages/placeholder-636x393.jpg' }}"
-                    class="recipe-image" alt="{{ recipe.title }}">
-                <div class="recipe-content">
-                    <h3 class="recipe-title">{{ recipe.title }}</h3>
-                    <div class="recipe-meta">
-                        <span>Ready in {{ recipe.readyInMinutes }} mins</span>
-                        <span>{{ recipe.servings }} servings</span>
+        <div class="dietary-grid">
+            <!-- Vegan Card -->
+            <div class="dietary-card">
+                <div class="card-header">
+                    <div class="card-icon"><i class="fas fa-leaf"></i></div>
+                    <h3 class="card-title">Vegan</h3>
+                </div>
+                <div class="card-body">
+                    <p class="card-description">
+                        A plant-based diet that excludes all animal products including meat, dairy, eggs, and honey.
+                    </p>
+                    
+                    <div class="card-section">
+                        <h4 class="section-title"><i class="fas fa-check-circle"></i> Includes</h4>
+                        <ul class="food-list">
+                            <li>Fruits and vegetables</li>
+                            <li>Legumes and beans</li>
+                            <li>Whole grains</li>
+                            <li>Nuts and seeds</li>
+                            <li>Plant-based alternatives</li>
+                        </ul>
                     </div>
-                    {% if recipe.vegetarian or recipe.vegan or recipe.glutenFree %}
-                    <div class="recipe-dietary">
-                        {% if recipe.vegetarian %}<span class="dietary-tag">Vegetarian</span>{% endif %}
-                        {% if recipe.vegan %}<span class="dietary-tag">Vegan</span>{% endif %}
-                        {% if recipe.glutenFree %}<span class="dietary-tag">Gluten Free</span>{% endif %}
+                    
+                    <div class="card-section">
+                        <h4 class="section-title"><i class="fas fa-times-circle"></i> Excludes</h4>
+                        <ul class="food-list">
+                            <li>All meat and poultry</li>
+                            <li>Fish and seafood</li>
+                            <li>Dairy products</li>
+                            <li>Eggs</li>
+                            <li>Animal-derived ingredients</li>
+                        </ul>
                     </div>
-                    {% endif %}
-                    <a href="{{ url_for('recipe_detail', recipe_id=recipe.id) }}" class="view-recipe">View Recipe</a>
+                    
+                    <div class="card-section">
+                        <h4 class="section-title"><i class="fas fa-heart"></i> Benefits</h4>
+                        <ul class="benefits-list">
+                            <li><i class="fas fa-check"></i> May reduce risk of chronic diseases</li>
+                            <li><i class="fas fa-check"></i> Lower environmental impact</li>
+                            <li><i class="fas fa-check"></i> Often higher in fiber and antioxidants</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
-            {% endfor %}
+
+            <!-- Vegetarian Card -->
+            <div class="dietary-card">
+                <div class="card-header">
+                    <div class="card-icon"><i class="fas fa-carrot"></i></div>
+                    <h3 class="card-title">Vegetarian</h3>
+                </div>
+                <div class="card-body">
+                    <p class="card-description">
+                        A diet that excludes meat but may include dairy products and eggs.
+                    </p>
+                    
+                    <div class="card-section">
+                        <h4 class="section-title"><i class="fas fa-check-circle"></i> Includes</h4>
+                        <ul class="food-list">
+                            <li>Fruits and vegetables</li>
+                            <li>Dairy products</li>
+                            <li>Eggs</li>
+                            <li>Grains and legumes</li>
+                            <li>Nuts and seeds</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card-section">
+                        <h4 class="section-title"><i class="fas fa-times-circle"></i> Excludes</h4>
+                        <ul class="food-list">
+                            <li>All meat and poultry</li>
+                            <li>Fish and seafood</li>
+                            <li>Animal-derived rennet</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card-section">
+                        <h4 class="section-title"><i class="fas fa-heart"></i> Benefits</h4>
+                        <ul class="benefits-list">
+                            <li><i class="fas fa-check"></i> Lower saturated fat intake</li>
+                            <li><i class="fas fa-check"></i> May support heart health</li>
+                            <li><i class="fas fa-check"></i> More sustainable than meat-based diets</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gluten-Free Card -->
+            <div class="dietary-card">
+                <div class="card-header">
+                    <div class="card-icon"><i class="fas fa-bread-slice"></i></div>
+                    <h3 class="card-title">Gluten-Free</h3>
+                </div>
+                <div class="card-body">
+                    <p class="card-description">
+                        A diet that excludes gluten, a protein found in wheat, barley, rye, and triticale.
+                    </p>
+                    
+                    <div class="card-section">
+                        <h4 class="section-title"><i class="fas fa-check-circle"></i> Includes</h4>
+                        <ul class="food-list">
+                            <li>Fruits and vegetables</li>
+                            <li>Meat and poultry</li>
+                            <li>Fish and seafood</li>
+                            <li>Rice and quinoa</li>
+                            <li>Gluten-free grains</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card-section">
+                        <h4 class="section-title"><i class="fas fa-times-circle"></i> Excludes</h4>
+                        <ul class="food-list">
+                            <li>Wheat and wheat products</li>
+                            <li>Barley and rye</li>
+                            <li>Most conventional breads</li>
+                            <li>Many processed foods</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card-section">
+                        <h4 class="section-title"><i class="fas fa-heart"></i> Benefits</h4>
+                        <ul class="benefits-list">
+                            <li><i class="fas fa-check"></i> Essential for those with celiac disease</li>
+                            <li><i class="fas fa-check"></i> May reduce inflammation</li>
+                            <li><i class="fas fa-check"></i> Can help with gluten sensitivity symptoms</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dairy-Free Card -->
+            <div class="dietary-card">
+                <div class="card-header">
+                    <div class="card-icon"><i class="fas fa-ice-cream"></i></div>
+                    <h3 class="card-title">Dairy-Free</h3>
+                </div>
+                <div class="card-body">
+                    <p class="card-description">
+                        A diet that excludes milk and milk products from cows, goats, and sheep.
+                    </p>
+                    
+                    <div class="card-section">
+                        <h4 class="section-title"><i class="fas fa-check-circle"></i> Includes</h4>
+                        <ul class="food-list">
+                            <li>Plant-based milks (almond, soy, oat)</li>
+                            <li>Dairy-free cheeses</li>
+                            <li>Coconut yogurt</li>
+                            <li>All fruits and vegetables</li>
+                            <li>Meat and fish</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card-section">
+                        <h4 class="section-title"><i class="fas fa-times-circle"></i> Excludes</h4>
+                        <ul class="food-list">
+                            <li>Milk (whole, skim, etc.)</li>
+                            <li>Cheese</li>
+                            <li>Yogurt</li>
+                            <li>Butter</li>
+                            <li>Ice cream</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card-section">
+                        <h4 class="section-title"><i class="fas fa-heart"></i> Benefits</h4>
+                        <ul class="benefits-list">
+                            <li><i class="fas fa-check"></i> Essential for lactose intolerance</li>
+                            <li><i class="fas fa-check"></i> May improve skin conditions</li>
+                            <li><i class="fas fa-check"></i> Can reduce digestive discomfort</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Nut-Free Card -->
+            <div class="dietary-card">
+                <div class="card-header">
+                    <div class="card-icon"><i class="fas fa-allergies"></i></div>
+                    <h3 class="card-title">Nut-Free</h3>
+                </div>
+                <div class="card-body">
+                    <p class="card-description">
+                        A diet that excludes all tree nuts and peanuts to prevent allergic reactions.
+                    </p>
+                    
+                    <div class="card-section">
+                        <h4 class="section-title"><i class="fas fa-check-circle"></i> Includes</h4>
+                        <ul class="food-list">
+                            <li>Seeds (sunflower, pumpkin)</li>
+                            <li>Seed butters</li>
+                            <li>All fruits and vegetables</li>
+                            <li>Grains and legumes (except peanuts)</li>
+                            <li>Meat and dairy</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card-section">
+                        <h4 class="section-title"><i class="fas fa-times-circle"></i> Excludes</h4>
+                        <ul class="food-list">
+                            <li>Peanuts</li>
+                            <li>Tree nuts (almonds, walnuts, etc.)</li>
+                            <li>Nut butters</li>
+                            <li>Foods processed with nuts</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card-section">
+                        <h4 class="section-title"><i class="fas fa-heart"></i> Benefits</h4>
+                        <ul class="benefits-list">
+                            <li><i class="fas fa-check"></i> Essential for nut allergies</li>
+                            <li><i class="fas fa-check"></i> Prevents allergic reactions</li>
+                            <li><i class="fas fa-check"></i> Safer for nut-free environments</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Keto Card -->
+            <div class="dietary-card">
+                <div class="card-header">
+                    <div class="card-icon"><i class="fas fa-bacon"></i></div>
+                    <h3 class="card-title">Keto</h3>
+                </div>
+                <div class="card-body">
+                    <p class="card-description">
+                        A high-fat, adequate-protein, low-carbohydrate diet that forces the body to burn fats rather than carbohydrates.
+                    </p>
+                    
+                    <div class="card-section">
+                        <h4 class="section-title"><i class="fas fa-check-circle"></i> Includes</h4>
+                        <ul class="food-list">
+                            <li>Meat and poultry</li>
+                            <li>Fish and seafood</li>
+                            <li>Eggs</li>
+                            <li>Low-carb vegetables</li>
+                            <li>Healthy fats</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card-section">
+                        <h4 class="section-title"><i class="fas fa-times-circle"></i> Excludes</h4>
+                        <ul class="food-list">
+                            <li>Grains and starches</li>
+                            <li>Sugary foods</li>
+                            <li>Most fruits</li>
+                            <li>Legumes</li>
+                            <li>Root vegetables</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card-section">
+                        <h4 class="section-title"><i class="fas fa-heart"></i> Benefits</h4>
+                        <ul class="benefits-list">
+                            <li><i class="fas fa-check"></i> May promote weight loss</li>
+                            <li><i class="fas fa-check"></i> Can improve blood sugar control</li>
+                            <li><i class="fas fa-check"></i> May reduce seizures in epilepsy</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </div>
-        {% else %}
-        <div class="error-message">No recipes found for these ingredients. Try different ingredients.</div>
-        {% endif %}
     </div>
 
-    <!-- Footer -->
-    <footer class="site-footer">
+     <!-- Footer -->
+     <footer class="site-footer">
         <div class="footer-container">
             <!-- Main Footer Content -->
             <div class="footer-grid">
@@ -753,16 +1008,15 @@
             </div>
         </div>
     </footer>
-
     <script>
-        // Mobile Menu Toggle
-        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+          // Mobile Menu Toggle
+          const mobileMenuBtn = document.getElementById('mobileMenuBtn');
         const mobileMenu = document.getElementById('mobileMenu');
 
         mobileMenuBtn.addEventListener('click', () => {
             mobileMenu.classList.toggle('active');
-            mobileMenuBtn.innerHTML = mobileMenu.classList.contains('active')
-                ? '<i class="fas fa-times"></i>'
+            mobileMenuBtn.innerHTML = mobileMenu.classList.contains('active') 
+                ? '<i class="fas fa-times"></i>' 
                 : '<i class="fas fa-bars"></i>';
         });
 
@@ -779,13 +1033,11 @@
         // Active link highlighting
         const navLinks = document.querySelectorAll('.nav-link');
         navLinks.forEach(link => {
-            link.addEventListener('click', function () {
+            link.addEventListener('click', function() {
                 navLinks.forEach(l => l.classList.remove('active'));
                 this.classList.add('active');
             });
         });
-
     </script>
 </body>
-
 </html>

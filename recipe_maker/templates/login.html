@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -67,7 +68,7 @@
             background: var(--white);
             padding: 3rem 2.5rem;
             border-radius: 1rem;
-            box-shadow: 0 4px 24px -6px rgba(0,0,0,0.08);
+            box-shadow: 0 4px 24px -6px rgba(0, 0, 0, 0.08);
             width: 100%;
             max-width: 400px;
         }
@@ -158,14 +159,60 @@
                 padding: 2rem 1.5rem;
             }
         }
+
+        /* Flash Messages */
+        .flash-container {
+            position: fixed;
+            top: 70px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            width: 100%;
+            max-width: 400px;
+            padding: 0 1rem;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .alert-danger {
+            background-color: #fee2e2;
+            color: #dc2626;
+            border: 1px solid #fca5a5;
+        }
+
+        .alert-success {
+            background-color: #dcfce7;
+            color: #16a34a;
+            border: 1px solid #86efac;
+        }
     </style>
 </head>
+
 <body>
     <nav>
         <div class="nav-container">
             <div class="logo">SmartRecipe</div>
         </div>
     </nav>
+
+    <div class="flash-container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+    </div>
 
     <div class="login-container">
         <div class="login-card">
@@ -179,12 +226,12 @@
                     <label>Email Address</label>
                     <input type="email" class="form-input" name="email" required>
                 </div>
-            
+
                 <div class="form-group">
                     <label>Password</label>
                     <input type="password" class="form-input" name="password" required>
                 </div>
-            
+
                 <div class="remember-forgot">
                     <div class="checkbox-group">
                         <input type="checkbox" id="remember">
@@ -192,15 +239,16 @@
                     </div>
                     <a href="#forgot" style="color: var(--indigo-700); text-decoration: none;">Forgot password?</a>
                 </div>
-            
+
                 <button type="submit" class="login-button">Sign In</button>
-            
+
                 <div class="signup-link">
                     Don't have an account? <a href="{{ url_for('signup_page') }}">Create account</a>
-                  </div>
-                  
+                </div>
+
             </form>
         </div>
     </div>
 </body>
+
 </html>
