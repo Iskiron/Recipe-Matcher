@@ -311,9 +311,12 @@
             <h1 class="hero-title">Transform Ingredients into Perfect Meals</h1>
             <p class="hero-description">AI-powered recipe recommendations based on your pantry items and dietary preferences</p>
             <form class="search-form">
-                <input type="search" placeholder="Enter ingredients (e.g., chicken, broccoli)..." class="search-input">
-                <button type="submit" class="search-button">Find Recipes</button>
+                <input id="ingredientInput" type="search" placeholder="Enter ingredients (e.g., chicken, broccoli)..." class="search-input">
+                <button id="findRecipes" type="submit" class="search-button">Find Recipes</button> <!-- Fixed ID -->
             </form>
+            
+            <div id="results"></div> <!-- Added this to display recipes -->
+            
         </div>
     </main>
 
@@ -389,5 +392,6 @@
             });
         });
     </script>
+    <script src="../static/scripts/script.js"></script>
 </body>
 </html>
