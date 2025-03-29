@@ -5,6 +5,7 @@ from flask_cors import CORS
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 import requests
 import os
+import uuid
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for frontend-backend communication
@@ -19,7 +20,7 @@ login_manager.init_app(app)  # Explicitly initialize login manager
 login_manager.login_view = "login_page"
 
 # Spoonacular API Key
-SPOONACULAR_API_KEY = "4dfd353cfaf54c8a904831ce44be9ad2"
+SPOONACULAR_API_KEY = "1f9c6e3e371f44c7abed1ff66cc99d75"
 
 # User Model
 class User(db.Model, UserMixin):
@@ -39,7 +40,7 @@ def signup():
     username = request.form.get("username")
     email = request.form.get("email")
     password = request.form.get("password")
-    terms_agreed = request.form.get("terms")  # Add this line
+    terms_agreed = request.form.get("terms")  
 
     # Validate required fields
     if not all([username, email, password]):
@@ -122,44 +123,48 @@ def home():
 
 @app.route('/dietary')
 def dietary():
-    return render_template('dietary.html')  # Or your dietary template name
+    return render_template('dietary.html')  # your dietary template name
 
 @app.route('/about')
 def about():
-    return render_template('about.html')  # Or your about template name
+    return render_template('about.html')  # your about template name
 
 @app.route('/community')
 def community():
-    return render_template('community.html')  # Or your community template name
+    return render_template('community.html')  # your community template name
 
-# Valid dietary filters (add this)
+# Valid dietary filters 
 VALID_DIETS = {
-    'vegetarian', 'vegan', 'gluten free', 'ketogenic', 'lacto vegetarian',
-    'ovo vegetarian', 'pescetarian', 'paleo', 'primal', 'low fodmap',
-    'whole30', 'dairy free', 'nut free'
+    'Vegetarian', 'Vegan', 'Gluten Free', 'Ketogenic', 'Lacto-Vegetarian',
+    'Ovo-Vegetarian', 'Pescetarian', 'Paleo', 'Primal', 'Low FODMAP',
+    'Whole30', 'Dairy Free', 'Nut Free'
 }
 
 # Recipe Search Route
 @app.route("/search", methods=["GET"])
 def search_recipes():
     ingredients = request.args.get("ingredients", "")
-    raw_diets = request.args.get("diet", "")  # Get comma-separated diets
-    
-    # Validate and filter diets
-    diets = [diet.lower().strip() for diet in raw_diets.split(',') if diet]
-    diets = [diet for diet in diets if diet in VALID_DIETS]
+    diet = request.args.get("diet", "").strip()  # Get single diet
 
-    print(f"Received ingredients: {ingredients}")  # Add this
-    print(f"Received diets: {raw_diets}")  # Add this
-    
+    # Validate diet against correct Spoonacular options
+    VALID_DIETS = {
+        'Vegetarian', 'Vegan', 'Gluten Free', 'Ketogenic', 'Lacto-Vegetarian',
+        'Ovo-Vegetarian', 'Pescetarian', 'Paleo', 'Primal', 'Low FODMAP',
+        'Whole30', 'Dairy Free', 'Nut Free'
+    }
+
+    # validate diet parameter
+    diet = diet if diet in VALID_DIETS else None
+    offset = request.args.get("offset", default=0, type=int)
     params = {
+        "random": str(uuid.uuid4())[:8],  
         "apiKey": SPOONACULAR_API_KEY,
         "ingredients": ingredients,
         "number": 12,
+        "diet": diet,
         "instructionsRequired": True,
         "addRecipeInformation": True,
-        "fillIngredients": True,
-        "diet": ','.join(diets) if diets else None
+        "offset": offset
     }
 
     try:
@@ -167,21 +172,23 @@ def search_recipes():
             "https://api.spoonacular.com/recipes/complexSearch",
             params={k: v for k, v in params.items() if v is not None}
         )
-        print(f"API Request URL: {response.url}")  # Add this
-        print(f"API Status Code: {response.status_code}")  # Add this
         response.raise_for_status()
         data = response.json()
-        recipes = data['results']
-
+        recipes = data.get('results', [])
+        
         return render_template(
-            "results.html",
-            ingredients=ingredients,
-            recipes=recipes,
-            diets=diets
+        "results.html",
+        ingredients=ingredients,
+        recipes=recipes,
+        diet=diet,
+        offset=offset  # Pass offset to template
         )
 
+    except requests.HTTPError as e:
+        flash(f"API Error: {e.response.status_code} - {e.response.text}", "danger")
+        return redirect(url_for("index"))
     except Exception as e:
-        flash(f"Error fetching recipes: {str(e)}", "danger")
+        flash(f"Error: {str(e)}", "danger")
         return redirect(url_for("index"))
 
 @app.route("/recipe/<int:recipe_id>")
@@ -220,38 +227,6 @@ def recipe_detail(recipe_id):
         return render_template("error.html", error_message="Recipe not found"), 404
     except Exception as e:
         return render_template("error.html", error_message=str(e)), 500
-
-    # Get basic recipe information
-    info_url = f"https://api.spoonacular.com/recipes/{recipe_id}/information"
-    params = {
-        "apiKey": SPOONACULAR_API_KEY,
-        "includeNutrition": True
-    }
-    
-    try:
-        # Get main recipe data
-        recipe_response = requests.get(info_url, params=params)
-        recipe_data = recipe_response.json()
-
-        # Get analyzed instructions
-        instructions_url = f"https://api.spoonacular.com/recipes/{recipe_id}/analyzedInstructions"
-        instructions_response = requests.get(instructions_url, params={"apiKey": SPOONACULAR_API_KEY})
-        instructions_data = instructions_response.json()
-
-        # Get nutrition data
-        nutrition_url = f"https://api.spoonacular.com/recipes/{recipe_id}/nutritionWidget.json"
-        nutrition_response = requests.get(nutrition_url, params={"apiKey": SPOONACULAR_API_KEY})
-        nutrition_data = nutrition_response.json()
-
-        return render_template(
-            "recipe_detail.html",
-            recipe=recipe_data,
-            instructions=instructions_data,
-            nutrition=nutrition_data
-        )
-        
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
     
 
 if __name__ == "__main__":

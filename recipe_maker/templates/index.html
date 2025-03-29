@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="SmartRecipe - AI-powered meal solutions using your ingredients and dietary needs">
-    <title>SmartRecipe - Intelligent Meal Planning</title>
+    <title>Fridge2Fork - Intelligent Meal Planning</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
@@ -702,7 +702,7 @@
         <div class="nav-container">
             <a href="#" class="logo">
                 <i class="fas fa-utensils logo-icon"></i>
-                <span class="logo-text">SmartRecipe</span>
+                <span class="logo-text">Fridge2Fork</span>
             </a>
 
             <div class="nav-links">
@@ -762,20 +762,21 @@
                     <h2 class="section-title">Dietary Preferences</h2>
                     <p class="section-description">Select your dietary requirements</p>
                     <div class="diet-filters">
-                        <!-- Added data-diet-value attributes matching Spoonacular API parameters -->
-                        <button type="button" class="diet-filter" data-diet-value="vegan">Vegan</button>
-                        <button type="button" class="diet-filter" data-diet-value="vegetarian">Vegetarian</button>
-                        <button type="button" class="diet-filter" data-diet-value="gluten free">Gluten-Free</button>
-                        <button type="button" class="diet-filter" data-diet-value="dairy free">Dairy-Free</button>
-                        <button type="button" class="diet-filter" data-diet-value="nut free">Nut-Free</button>
-                        <button type="button" class="diet-filter" data-diet-value="ketogenic">Keto</button>
-                        <button type="button" class="diet-filter" data-diet-value="none">None</button>
+                        <!-- Changed data-diet-value to match Spoonacular's exact requirements -->
+                        <!-- Kept button text the same for styling purposes -->
+                        <button type="button" class="diet-filter" data-diet-value="Vegan">Vegan</button>
+                        <button type="button" class="diet-filter" data-diet-value="Vegetarian">Vegetarian</button>
+                        <button type="button" class="diet-filter" data-diet-value="Gluten Free">Gluten-Free</button>
+                        <button type="button" class="diet-filter" data-diet-value="Dairy Free">Dairy-Free</button>
+                        <button type="button" class="diet-filter" data-diet-value="Nut Free">Nut-Free</button>
+                        <button type="button" class="diet-filter" data-diet-value="Ketogenic">Keto</button>
+                        <button type="button" class="diet-filter" data-diet-value="">None</button>
                     </div>
                 </div>
             </section>
 
             <form id="recipeSearchForm" class="search-form" method="GET" action="/search">
-                <input type="hidden" name="diet" id="dietFiltersInput">
+                <input type="hidden" name="diet" id="dietFiltersInput" value="">
                 <input type="text" id="ingredientsInput" name="ingredients"
                     placeholder="Enter ingredients (comma separated, e.g., chicken, broccoli, rice)"
                     class="search-input" required>
@@ -833,7 +834,7 @@
             <div class="footer-grid">
                 <!-- Company Info -->
                 <div class="footer-section">
-                    <h3 class="footer-heading">SmartRecipe</h3>
+                    <h3 class="footer-heading">Fridge2Fork</h3>
                     <p class="footer-text">Transforming ingredients into perfect meals with AI-powered recommendations.
                     </p>
                     <div class="social-links">
@@ -882,7 +883,7 @@
             <!-- Footer Bottom -->
             <div class="footer-bottom">
                 <div class="copyright">
-                    &copy; 2023 SmartRecipe. All rights reserved.
+                    &copy; 2025 Fridge2Fork. All rights reserved.
                 </div>
                 <div class="legal-links">
                     <a href="#privacy">Privacy Policy</a>
@@ -927,36 +928,18 @@
         // Dietary Filter Handling
 
         const dietFilters = document.querySelectorAll('.diet-filter');
-        const dietInput = document.getElementById('dietFiltersInput');
-        let activeDiets = new Set();
+const dietInput = document.getElementById('dietFiltersInput');
 
-        dietFilters.forEach(button => {
-            button.addEventListener('click', () => {
-                const dietValue = button.dataset.dietValue;
-
-                if (dietValue === 'none') {
-                    // Handle 'None' special case
-                    dietFilters.forEach(b => b.classList.remove('active'));
-                    activeDiets.clear();
-                    button.classList.add('active');
-                    dietInput.value = '';
-                } else {
-                    // Toggle filter
-                    button.classList.toggle('active');
-                    document.querySelector('[data-diet-value="none"]').classList.remove('active');
-
-                    if (button.classList.contains('active')) {
-                        activeDiets.add(dietValue);
-                    } else {
-                        activeDiets.delete(dietValue);
-                    }
-
-                    // Update hidden input value
-                    dietInput.value = Array.from(activeDiets).join(',');
-                }
-            });
-        });
-
+dietFilters.forEach(button => {
+    button.addEventListener('click', () => {
+        // Clear all active states
+        dietFilters.forEach(b => b.classList.remove('active'));
+        
+        // Set new state
+        button.classList.add('active');
+        dietInput.value = button.dataset.dietValue;
+    });
+});
     </script>
 </body>
 

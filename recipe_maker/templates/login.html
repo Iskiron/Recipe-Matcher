@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SmartRecipe - Login</title>
+    <title>Fridge2Fork - Login</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
@@ -41,19 +41,42 @@
         }
 
         .nav-container {
-            max-width: 1200px;
+            max-width: 1280px;
             margin: 0 auto;
             padding: 0 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            height: 70px;
         }
 
         .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            font-size: 1.75rem;
+            color: var(--indigo-600);
+            transition: transform 0.5s ease;
+        }
+
+        .logo:hover .logo-icon {
+            transform: rotate(15deg);
+        }
+
+        .logo-text {
             font-size: 1.5rem;
             font-weight: 700;
-            color: var(--indigo-700);
+            background: linear-gradient(to right, var(--indigo-600), var(--indigo-700));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            transition: all var(--transition-speed) ease;
         }
+
 
         /* Login Container */
         .login-container {
@@ -198,8 +221,11 @@
 <body>
     <nav>
         <div class="nav-container">
-            <div class="logo">SmartRecipe</div>
-        </div>
+            <a href="{{ url_for('home') }}" class="logo">
+                <i class="fas fa-utensils logo-icon"></i>
+                <span class="logo-text">Fridge2Fork</span>
+            </a>
+            </div>
     </nav>
 
     <div class="flash-container">

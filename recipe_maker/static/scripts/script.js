@@ -1,5 +1,5 @@
 async function fetchRecipes(event) {
-    event.preventDefault(); // ✅ Prevents form from refreshing the page
+    event.preventDefault(); 
 
     const ingredients = document.getElementById("ingredientInput").value.trim();
     if (!ingredients) {
@@ -12,7 +12,7 @@ async function fetchRecipes(event) {
         
         if (response.ok) {
             const data = await response.json();
-            displayRecipes(data);  // ✅ Function to show recipes on the frontend
+            displayRecipes(data);  
         } else {
             console.error("Error fetching recipes");
             alert("Failed to fetch recipes. Please try again.");
@@ -23,12 +23,12 @@ async function fetchRecipes(event) {
     }
 }
 
-// ✅ Fixing button ID and adding event listener
+
 document.getElementById('findRecipes').addEventListener('click', fetchRecipes);
 
 function displayRecipes(recipes) {
     const resultsDiv = document.getElementById("results");
-    resultsDiv.innerHTML = "";  // ✅ Clear previous results
+    resultsDiv.innerHTML = "";  
     
     if (recipes.length === 0) {
         resultsDiv.innerHTML = "<p>No recipes found. Try different ingredients.</p>";
