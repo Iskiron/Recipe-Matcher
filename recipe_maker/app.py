@@ -20,7 +20,7 @@ login_manager.init_app(app)  # Explicitly initialize login manager
 login_manager.login_view = "login_page"
 
 # Spoonacular API Key
-SPOONACULAR_API_KEY = "1f9c6e3e371f44c7abed1ff66cc99d75"
+SPOONACULAR_API_KEY = "KEY"
 
 # User Model
 class User(db.Model, UserMixin):
